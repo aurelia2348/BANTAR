@@ -90,11 +90,11 @@
         </div>
 
         <!-- Item Placeholder / Add -->
-        <div class="ds-catalog-placeholder ds-card">
+        <div class="ds-catalog-placeholder ds-card" onclick="window.location.href='index.php?page=tambah-busana'">
             <div class="ds-placeholder-icon">
                 <i class="ph ph-plus"></i>
             </div>
-            <h3>Expanding the<br>Atelier</h3>
+            <h3>Expanding the<br>Bantar</h3>
             <p>NEW ACQUISITIONS<br>ARRIVING WEEKLY</p>
         </div>
 

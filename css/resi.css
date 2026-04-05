@@ -1,0 +1,331 @@
+/* Resi CSS specific styles */
+.resi-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 64px 24px;
+    font-family: var(--font-primary);
+}
+
+.resi-success-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(229, 193, 88, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-gold);
+    font-size: 24px;
+    margin-bottom: 24px;
+    background: rgba(229, 193, 88, 0.05);
+}
+
+.resi-header-text {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.resi-header-text h2 {
+    font-family: var(--font-primary);
+    font-weight: 500;
+    font-size: 32px;
+    margin: 0 0 12px 0;
+    color: var(--text-primary);
+}
+
+.resi-header-text p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.resi-box {
+    width: 100%;
+    max-width: 760px;
+    background-color: #171821; /* Slightly lighter than bg-dark */
+    /* Dotted pattern background */
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    padding: 48px;
+    position: relative;
+    margin-bottom: 40px;
+}
+
+/* Section styling */
+.resi-section {
+    margin-bottom: 40px;
+}
+
+.resi-top-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px dashed rgba(255,255,255,0.1);
+    padding-bottom: 32px;
+}
+
+.resi-label {
+    font-size: 9px;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.resi-title-huge {
+    font-family: 'Times New Roman', serif;
+    font-size: 40px;
+    font-style: italic;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+    letter-spacing: 0.5px;
+}
+
+.resi-trans-id {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.resi-issued {
+    text-align: right;
+}
+
+.resi-issued-label {
+    font-size: 9px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.resi-issued-date {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+/* User Info Section */
+.resi-user-info {
+    display: flex;
+    gap: 120px;
+    margin-top: 32px;
+}
+
+.resi-user-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.resi-user-block .resi-label {
+    color: var(--text-secondary);
+}
+
+.resi-user-name {
+    font-family: 'Times New Roman', serif;
+    font-size: 20px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.resi-user-detail {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+}
+
+.resi-fitting-sched {
+    color: var(--accent-gold);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+/* Items List */
+.resi-items-list {
+    margin-top: 40px;
+}
+
+.resi-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.resi-item-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 24px;
+}
+
+.resi-item-details {
+    flex: 1;
+}
+
+.resi-item-name {
+    font-family: var(--font-primary);
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.resi-item-meta {
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+}
+
+.resi-item-price {
+    font-family: var(--font-primary);
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Subtotals */
+.resi-subtotals {
+    margin-top: 40px;
+    border-top: 1px dashed rgba(255,255,255,0.1);
+    padding-top: 32px;
+}
+
+.resi-calc-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-size: 11px;
+}
+
+.resi-calc-label {
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.resi-calc-val {
+    color: var(--text-primary);
+}
+
+/* Total Box */
+.resi-total-box {
+    margin-top: 32px;
+    background: rgba(229, 193, 88, 0.05);
+    border: 1px solid rgba(229, 193, 88, 0.2);
+    border-radius: 4px;
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.resi-total-text h4 {
+    font-size: 11px;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 4px 0;
+}
+
+.resi-total-text p {
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.resi-total-amount {
+    font-family: var(--font-primary);
+    font-size: 32px;
+    color: var(--accent-gold);
+    font-weight: 400;
+}
+
+/* Footer of Receipt */
+.resi-receipt-footer {
+    margin-top: 40px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 24px;
+}
+
+.resi-receipt-footer p {
+    font-size: 9px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 8px 0;
+}
+
+.resi-footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
+
+.resi-footer-links span {
+    font-size: 9px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+
+.resi-footer-links span:hover {
+    color: var(--text-primary);
+}
+
+/* Buttons */
+.resi-actions {
+    display: flex;
+    gap: 16px;
+}
+
+.resi-btn {
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-primary);
+}
+
+.resi-btn i {
+    font-size: 16px;
+}
+
+.resi-btn-primary {
+    background: var(--accent-gold);
+    color: #000;
+    border: 1px solid var(--accent-gold);
+}
+
+.resi-btn-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+.resi-btn-outline {
+    background: rgba(255,255,255,0.02);
+    color: var(--text-primary);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.resi-btn-outline:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.3);
+}

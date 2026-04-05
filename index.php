@@ -11,7 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <?php 
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard'; 
-$is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-sewa'); 
+$is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-sewa' || $page == 'tambah-busana' || $page == 'financial' || $page == 'resi' || $page == 'rental-history'); 
 ?>
 
 <body class="d-flex flex-column min-vh-100 <?php echo $is_dashboard ? 'bg-dark' : ''; ?>">
@@ -34,6 +34,14 @@ $is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-
             include 'page/archive.php';
         } elseif ($page == 'tambah-sewa') {
             include 'page/tambah-sewa.php';
+        } elseif ($page == 'financial') {
+            include 'page/financial.php';
+        } elseif ($page == 'resi') {
+            include 'page/resi.php';
+        } elseif ($page == 'rental-history') {
+            include 'page/rental-history.php';
+        } elseif ($page == 'tambah-busana') {
+            include 'page/tambah-busana.php';
         } else {
             echo "<div class='mt-4'><h2>Halaman tidak ditemukan</h2></div>";
         }

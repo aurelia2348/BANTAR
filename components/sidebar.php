@@ -17,22 +17,16 @@
                 ARCHIVE CATALOG
             </a>
         </li>
-        <li class="ds-nav-item">
-            <a href="#" class="ds-nav-link">
+        <li class="ds-nav-item <?php echo $page == 'rental-history' ? 'active' : ''; ?>">
+            <a href="index.php?page=rental-history" class="ds-nav-link">
                 <i class="ph ph-clock-counter-clockwise"></i>
                 RENTAL HISTORY
             </a>
         </li>
-        <li class="ds-nav-item">
-            <a href="#" class="ds-nav-link">
+        <li class="ds-nav-item <?php echo $page == 'financial' ? 'active' : ''; ?>">
+            <a href="index.php?page=financial" class="ds-nav-link">
                 <i class="ph ph-money"></i>
                 FINANCIALS
-            </a>
-        </li>
-        <li class="ds-nav-item">
-            <a href="#" class="ds-nav-link">
-                <i class="ph ph-chart-line-up"></i>
-                ANALYTICS
             </a>
         </li>
     </ul>
