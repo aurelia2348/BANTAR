@@ -1,9 +1,7 @@
-<div class ="footer bg-dark text-white">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <p>Footer</p>
-            </div>
-        </div>
+<div class="ds-footer">
+    <div>&copy; 2024 DIGITAL ATELIER. ALL RIGHTS RESERVED.</div>
+    <div class="ds-footer-links">
+        <a href="#">PRIVACY POLICY</a>
+        <a href="#">TERMS OF SERVICE</a>
     </div>
 </div>

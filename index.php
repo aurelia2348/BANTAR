@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,34 +9,37 @@
     <title>Document</title>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-<body class="d-flex flex-column min-vh-100">
-    <?php include 'components/navbar.php'; ?>
+<?php 
+$page = isset($_GET['page']) ? $_GET['page'] : 'dashboard'; 
+$is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-sewa'); 
+?>
+
+<body class="d-flex flex-column min-vh-100 <?php echo $is_dashboard ? 'bg-dark' : ''; ?>">
+    <?php if (!$is_dashboard) include 'components/navbar.php'; ?>
     <div class="container flex-grow-1">
-        <?php 
-        if (isset($_GET['page'])) {
-            $page = $_GET['page'];
-            if ($page == 'stok') {
-                include 'page/stok.php';
-            } elseif ($page == 'sewa') {
-                include 'page/sewa.php';
-            } elseif ($page == 'laporan-keuangan') {
-                include 'page/laporan-keuangan.php';
-            } elseif ($page == 'login') {
-                include 'page/login.php';
-            } elseif ($page == 'register') {
-                include 'page/register.php';
-            } else {
-                echo "<div class='mt-4'><h2>Halaman tidak ditemukan</h2></div>";
-            }
+        <?php
+        if ($page == 'stok') {
+            include 'page/stok.php';
+        } elseif ($page == 'sewa') {
+            include 'page/sewa.php';
+        } elseif ($page == 'laporan-keuangan') {
+            include 'page/laporan-keuangan.php';
+        } elseif ($page == 'login') {
+            include 'page/login.php';
+        } elseif ($page == 'register') {
+            include 'page/register.php';
+        } elseif ($page == 'dashboard') {
+            include 'page/dashboard.php';
+        } elseif ($page == 'archive') {
+            include 'page/archive.php';
+        } elseif ($page == 'tambah-sewa') {
+            include 'page/tambah-sewa.php';
         } else {
+            echo "<div class='mt-4'><h2>Halaman tidak ditemukan</h2></div>";
+        }
         ?>
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <h1>Hai ini home!</h1>
-            </div>
-        </div>
-        <?php } ?>
     </div>
-    <?php include 'components/footer.php'; ?>
+    <?php if (!$is_dashboard) include 'components/footer.php'; ?>
 </body>
+
 </html>
