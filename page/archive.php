@@ -13,7 +13,10 @@
     <?php include 'components/sidebar.php'; ?>
 
     <div class="ds-main">
-        <?php include 'components/header.php'; ?>
+        <?php 
+        $page_title = 'ARCHIVE CATALOG';
+        include 'components/header.php'; 
+        ?>
         <?php include 'components/archive.php'; ?>
         <?php include 'components/footer.php'; ?>
     </div>

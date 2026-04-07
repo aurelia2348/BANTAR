@@ -250,6 +250,69 @@
     color: var(--accent-gold);
 }
 
+/* Action Buttons */
+.rh-btn-action {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: var(--font-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 110px;
+    border: none;
+}
+
+.rh-btn-action i {
+    font-size: 14px;
+}
+
+/* RETURN Button (Active state target) */
+.rh-btn-action.rh-btn-mark {
+    background: var(--accent-gold);
+    color: #000;
+    box-shadow: 0 4px 12px rgba(229, 193, 88, 0.15);
+}
+
+.rh-btn-action.rh-btn-mark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(229, 193, 88, 0.3);
+    background: #EED270;
+}
+
+/* REMIND Button (Overdue state target) */
+.rh-btn-action.rh-btn-urgent {
+    background: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+    border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.rh-btn-action.rh-btn-urgent:hover {
+    background: #F44336;
+    color: #FFF;
+    border-color: #F44336;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(244, 67, 54, 0.25);
+}
+
+/* CLOSED Button (Completed state) */
+.rh-btn-action.rh-btn-disabled {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    cursor: not-allowed;
+}
+
+.rh-btn-action.rh-btn-disabled:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
 /* Pagination */
 .rh-pagination-bar {
     display: flex;

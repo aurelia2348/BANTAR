@@ -36,6 +36,7 @@
                     <th>RETURN DATE</th>
                     <th>STATUS</th>
                     <th style="text-align: right;">AMOUNT</th>
+                    <th style="text-align: right; padding-right: 24px;">ACTIONS</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,6 +69,9 @@
                     <td style="text-align: right;">
                         <span class="rh-col-amount">$1,240.00</span>
                     </td>
+                    <td style="text-align: right; white-space: nowrap; padding-right: 24px;">
+                        <button class="rh-btn-action rh-btn-mark" onclick="event.stopPropagation(); simulateReturn(this);"><i class="ph ph-check-circle"></i> RETURN</button>
+                    </td>
                 </tr>
 
                 <!-- Row 2 -->
@@ -98,6 +102,9 @@
                     </td>
                     <td style="text-align: right;">
                         <span class="rh-col-amount">$850.00</span>
+                    </td>
+                    <td style="text-align: right; white-space: nowrap; padding-right: 24px;">
+                        <button class="rh-btn-action rh-btn-disabled" disabled onclick="event.stopPropagation();"><i class="ph ph-lock-key"></i> CLOSED</button>
                     </td>
                 </tr>
 
@@ -130,6 +137,9 @@
                     <td style="text-align: right;">
                         <span class="rh-col-amount">$3,400.00</span>
                     </td>
+                    <td style="text-align: right; white-space: nowrap; padding-right: 24px;">
+                        <button class="rh-btn-action rh-btn-urgent" onclick="event.stopPropagation(); simulateRemind(this);"><i class="ph ph-warning-circle"></i> REMIND</button>
+                    </td>
                 </tr>
 
                 <!-- Row 4 -->
@@ -160,6 +170,9 @@
                     </td>
                     <td style="text-align: right;">
                         <span class="rh-col-amount">$2,100.00</span>
+                    </td>
+                    <td style="text-align: right; white-space: nowrap; padding-right: 24px;">
+                        <button class="rh-btn-action rh-btn-disabled" disabled onclick="event.stopPropagation();"><i class="ph ph-lock-key"></i> CLOSED</button>
                     </td>
                 </tr>
 
@@ -286,5 +299,45 @@
         if (event.target == modal) {
             closeReceiptModal();
         }
+    }
+
+    // Interactive UI Simulation
+    function simulateReturn(btn) {
+        const tr = btn.closest('tr');
+        const pill = tr.querySelector('.rh-status-pill');
+        
+        // Add a small fade effect
+        pill.style.opacity = '0';
+        btn.style.transform = 'scale(0.95)';
+        btn.style.opacity = '0.5';
+
+        setTimeout(() => {
+            // Change pill to COMPLETED
+            pill.classList.remove('rh-status-active');
+            pill.classList.add('rh-status-completed');
+            pill.innerHTML = '<span class="rh-status-dot"></span> COMPLETED';
+            pill.style.opacity = '1';
+
+            // Change button to CLOSED
+            const tdAction = btn.parentElement;
+            tdAction.innerHTML = '<button class="rh-btn-action rh-btn-disabled" disabled onclick="event.stopPropagation();"><i class="ph ph-lock-key"></i> CLOSED</button>';
+        }, 300);
+    }
+
+    function simulateRemind(btn) {
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> SENT!';
+        btn.style.backgroundColor = '#4CAF50';
+        btn.style.borderColor = '#4CAF50';
+        btn.style.color = '#fff';
+        btn.disabled = true;
+
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.style.backgroundColor = '';
+            btn.style.borderColor = '';
+            btn.style.color = '';
+            btn.disabled = false;
+        }, 2000);
     }
 </script>

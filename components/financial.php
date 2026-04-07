@@ -3,7 +3,7 @@
         <div class="ds-title">
             <h1>Financial Reports</h1>
             <p style="text-transform: none; color: var(--text-secondary); font-size: 13px; max-width: 600px; line-height: 1.6; margin-top: 12px; letter-spacing: 0;">
-                A comprehensive breakdown of revenue distribution across the haute couture archive. Analyzing fiscal performance and artist commissions for <span style="color: var(--accent-gold); font-style: italic;">Q3 Fiscal Year 2024.</span>
+                A breakdown of revenue streams across BANTAR's dual inventory model: <span style="color: var(--accent-gold); font-weight: bold;">Designer Partner Collections</span> and <span style="color: var(--accent-gold); font-weight: bold;">Owned Carnival Costumes</span>.
             </p>
         </div>
         <div class="fin-top-actions">
@@ -15,31 +15,31 @@
     <!-- Stats Grid -->
     <div class="fin-stats-grid">
         <div class="fin-stat-card">
-            <div class="fin-stat-label">GROSS REVENUE</div>
-            <div class="fin-stat-value">$142,890.00</div>
+            <div class="fin-stat-label">TOTAL GROSS REVENUE</div>
+            <div class="fin-stat-value">Rp 84.500.000</div>
             <div class="fin-stat-meta positive">
                 <i class="ph ph-trend-up"></i> +12.4% vs last mo
             </div>
         </div>
         <div class="fin-stat-card">
-            <div class="fin-stat-label">PLATFORM SHARE (10%)</div>
-            <div class="fin-stat-value">$14,289.00</div>
+            <div class="fin-stat-label">BANTAR NET EARNINGS</div>
+            <div class="fin-stat-value">Rp 32.150.000</div>
             <div class="fin-stat-meta">
-                FIXED MAINTENANCE FEE
+                FROM 10% DESIGNER + CARNIVAL + FINES
             </div>
         </div>
         <div class="fin-stat-card">
-            <div class="fin-stat-label">DESIGNER PAYOUT (70%)</div>
-            <div class="fin-stat-value">$100,023.00</div>
+            <div class="fin-stat-label">DESIGNER PAYOUTS</div>
+            <div class="fin-stat-value">Rp 48.200.000</div>
             <div class="fin-stat-meta">
-                TOTAL ARTIST EARNINGS
+                90% SHARE + 100% DESIGNER FINES
             </div>
         </div>
         <div class="fin-stat-card">
-            <div class="fin-stat-label">OUTSTANDING DUES</div>
-            <div class="fin-stat-value">$8,450.00</div>
+            <div class="fin-stat-label">MODEL & TALENT FEES</div>
+            <div class="fin-stat-value">Rp 4.150.000</div>
             <div class="fin-stat-meta" style="color: var(--text-secondary);">
-                <div class="fin-stat-meta-icon"><i class="ph-fill ph-clock"></i></div> Pending model settlements
+                <div class="fin-stat-meta-icon"><i class="ph-fill ph-users"></i></div> 30% FROM CARNIVAL PACKAGES
             </div>
         </div>
     </div>
@@ -47,16 +47,16 @@
     <!-- Ledger Table -->
     <div class="fin-ledger-section">
         <div class="fin-ledger-header">
-            <h3 class="fin-ledger-title">REVENUE SPLIT LEDGER</h3>
+            <h3 class="fin-ledger-title">TRANSACTION SPLIT LEDGER</h3>
             <div class="fin-ledger-legend">
                 <div class="fin-legend-item">
-                    <span class="fin-legend-dot fin-dot-gold"></span> 10% PLATFORM
+                    <span class="fin-legend-dot fin-dot-gold"></span> BANTAR
                 </div>
                 <div class="fin-legend-item">
-                    <span class="fin-legend-dot fin-dot-blue"></span> 70% ARTIST
+                    <span class="fin-legend-dot fin-dot-blue"></span> DESIGNER
                 </div>
                 <div class="fin-legend-item">
-                    <span class="fin-legend-dot fin-dot-peach"></span> 20% LOGISTICS
+                    <span class="fin-legend-dot fin-dot-peach"></span> MODEL
                 </div>
             </div>
         </div>
@@ -64,97 +64,102 @@
         <table class="fin-table">
             <thead>
                 <tr>
-                    <th>COLLECTION / ID</th>
-                    <th>TOTAL GROSS</th>
-                    <th>PLATFORM SPLIT</th>
-                    <th>DESIGNER PAYOUT</th>
-                    <th>MODEL / AGENT</th>
-                    <th>SETTLEMENT STATUS</th>
+                    <th>COSTUME / CATEGORY</th>
+                    <th>RENTAL FEE (+ FINES)</th>
+                    <th>BANTAR SHARE</th>
+                    <th>DESIGNER SHARE</th>
+                    <th>MODEL SHARE</th>
+                    <th>STATUS</th>
                 </tr>
             </thead>
             <tbody>
+                <!-- Row 1: Busana Desainer dengan Denda -->
                 <tr>
                     <td>
                         <div class="fin-col-collection">
-                            <img src="assets/catalog_1.png" alt="Victorian Noir" class="fin-col-img">
-                            <div class="fin-col-details">
+                            <div class="fin-col-details" style="margin-left: 0;">
                                 <h4>Victorian Noir</h4>
-                                <span>#VN-2024-001</span>
+                                <span style="color: #8CA3C5;">BUSANA DESAINER</span>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <span class="fin-val-main">$24,500.00</span>
+                        <span class="fin-val-main">Rp 5.500.000</span>
+                        <span class="fin-val-sub">Rp 5Jt Sewa + Rp 500rb Denda</span>
                     </td>
                     <td>
-                        <span class="fin-val-main fin-val-gold">$2,450.00</span>
-                        <span class="fin-val-sub">10% PLATFORM FIXED</span>
+                        <span class="fin-val-main fin-val-gold">Rp 500.000</span>
+                        <span class="fin-val-sub">10% DARI SEWA</span>
                     </td>
                     <td>
-                        <span class="fin-val-main" style="color: #8CA3C5;">$17,150.00</span>
-                        <span class="fin-val-sub">70% ARTIST SHARE</span>
+                        <span class="fin-val-main" style="color: #8CA3C5;">Rp 5.000.000</span>
+                        <span class="fin-val-sub">90% SEWA + 100% DENDA</span>
                     </td>
                     <td>
-                        <span class="fin-val-main" style="color: #C5A39B;">$4,900.00</span>
-                        <span class="fin-val-sub">20% MODEL COMMISSION</span>
+                        <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
+                        <span class="fin-val-sub">NOT APPLICABLE</span>
                     </td>
                     <td>
                         <span class="fin-badge fin-badge-cleared">CLEARED</span>
                     </td>
                 </tr>
+
+                <!-- Row 2: Kostum Karnaval INCLUDE Model -->
                 <tr>
                     <td>
                         <div class="fin-col-collection">
-                            <img src="assets/catalog_2.png" alt="Digital Brutalism" class="fin-col-img">
-                            <div class="fin-col-details">
-                                <h4>Digital Brutalism</h4>
-                                <span>#DB-2024-042</span>
+                            <div class="fin-col-details" style="margin-left: 0;">
+                                <h4>Garuda Nusantara</h4>
+                                <span style="color: var(--accent-gold);">KOSTUM KARNAVAL (W/ MODEL)</span>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <span class="fin-val-main">$41,200.00</span>
+                        <span class="fin-val-main">Rp 3.000.000</span>
+                        <span class="fin-val-sub">HARGA BUNDLE MODEL</span>
                     </td>
                     <td>
-                        <span class="fin-val-main fin-val-gold">$12,360.00</span>
-                        <span class="fin-val-sub">30% HIGH TIER REV</span>
-                    </td>
-                    <td>
-                        <span class="fin-val-main" style="color: #8CA3C5;">$28,840.00</span>
-                        <span class="fin-val-sub">70% COMMISSION</span>
+                        <span class="fin-val-main fin-val-gold">Rp 2.100.000</span>
+                        <span class="fin-val-sub">70% KEPEMILIKAN</span>
                     </td>
                     <td>
                         <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
-                        <span class="fin-val-sub">NO TALENT ATTACHED</span>
+                        <span class="fin-val-sub">NO DESIGNER CUT</span>
+                    </td>
+                    <td>
+                        <span class="fin-val-main" style="color: #C5A39B;">Rp 900.000</span>
+                        <span class="fin-val-sub">30% MODEL FEE</span>
                     </td>
                     <td>
                         <span class="fin-badge fin-badge-pending">PENDING</span>
                     </td>
                 </tr>
+
+                <!-- Row 3: Kostum Karnaval TANPA Model + Denda -->
                 <tr>
                     <td>
                         <div class="fin-col-collection">
-                            <img src="assets/catalog_3.png" alt="Solaris Gilded" class="fin-col-img">
-                            <div class="fin-col-details">
-                                <h4>Solaris Gilded</h4>
-                                <span>#SG-2024-009</span>
+                            <div class="fin-col-details" style="margin-left: 0;">
+                                <h4>Nusantara Warrior</h4>
+                                <span style="color: var(--accent-gold);">KOSTUM KARNAVAL (BASE)</span>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <span class="fin-val-main">$18,750.00</span>
+                        <span class="fin-val-main">Rp 2.200.000</span>
+                        <span class="fin-val-sub">Rp 2Jt Sewa + Rp 200rb Denda</span>
                     </td>
                     <td>
-                        <span class="fin-val-main fin-val-gold">$1,875.00</span>
-                        <span class="fin-val-sub">10% PLATFORM FEE</span>
+                        <span class="fin-val-main fin-val-gold">Rp 2.200.000</span>
+                        <span class="fin-val-sub">100% SEWA + 100% DENDA</span>
                     </td>
                     <td>
-                        <span class="fin-val-main" style="color: #8CA3C5;">$13,125.00</span>
-                        <span class="fin-val-sub">70% DESIGN PAYOUT</span>
+                        <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
+                        <span class="fin-val-sub">NO DESIGNER CUT</span>
                     </td>
                     <td>
-                        <span class="fin-val-main" style="color: #C5A39B;">$3,750.00</span>
-                        <span class="fin-val-sub">20% MODEL FEE</span>
+                        <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
+                        <span class="fin-val-sub">NO MODEL CHOSEN</span>
                     </td>
                     <td>
                         <span class="fin-badge fin-badge-cleared">CLEARED</span>
@@ -167,31 +172,37 @@
     <!-- Bottom Panels -->
     <div class="fin-bottom-grid">
         <div class="fin-panel">
-            <h3 class="fin-panel-title">REVENUE SPLIT RATIONALE</h3>
+            <h3 class="fin-panel-title">BUSINESS LOGIC & SPLIT RULES</h3>
             
-            <div class="fin-rationale-item">
+            <div class="fin-rationale-item" style="border-left: 3px solid #8CA3C5; padding-left: 16px;">
                 <div class="fin-rat-top">
-                    <span>Standard Archive Tier (10/90)</span>
-                    <span>Applied to 82% of Catalog</span>
+                    <span style="font-weight: bold; color: #8CA3C5;">BUSANA DESAINER</span>
                 </div>
-                <div class="fin-rat-bar">
-                    <div class="fin-rat-fill" style="width: 82%;"></div>
-                </div>
+                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">
+                    Sewa Dasar: <strong>10% BANTAR | 90% DESAINER</strong><br>
+                    Tagihan Fines (Denda Keterlambatan/Kerusakan) utuh <strong>100% dialokasikan ke Desainer</strong>.
+                </p>
             </div>
 
-            <div class="fin-rationale-item" style="margin-bottom: 0;">
+            <div class="fin-rationale-item" style="border-left: 3px solid #C5A39B; padding-left: 16px; margin-top: 24px;">
                 <div class="fin-rat-top">
-                    <span>Premium Talent Tier (30/70)</span>
-                    <span>Applied to 18% of Catalog</span>
+                    <span style="font-weight: bold; color: #C5A39B;">KOSTUM KARNAVAL (+ MODEL)</span>
                 </div>
-                <div class="fin-rat-bar">
-                    <div class="fin-rat-fill blue" style="width: 18%;"></div>
-                </div>
+                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">
+                    Harga paket lebih tinggi. Sewa Dasar: <strong>70% BANTAR | 30% MODEL</strong><br>
+                    Tagihan Fines (Denda) dialokasikan <strong>100% ke pihak BANTAR</strong>.
+                </p>
             </div>
 
-            <p class="fin-rationale-note">
-                Revenue splits are calculated based on the artifact's rarity score and historical rental demand. Higher platform shares are associated with logistics-heavy garments.
-            </p>
+            <div class="fin-rationale-item" style="border-left: 3px solid var(--accent-gold); padding-left: 16px; margin-top: 24px; margin-bottom: 0;">
+                <div class="fin-rat-top">
+                    <span style="font-weight: bold; color: var(--accent-gold);">KOSTUM KARNAVAL (TANPA MODEL)</span>
+                </div>
+                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">
+                    Sewa Dasar: <strong>100% BANTAR</strong><br>
+                    Karena properti penuh milik BANTAR, segala Denda juga <strong>100% ditarik ke BANTAR</strong>.
+                </p>
+            </div>
         </div>
 
         <div class="fin-panel">

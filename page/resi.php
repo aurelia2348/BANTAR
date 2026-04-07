@@ -14,7 +14,10 @@
     <?php include 'components/sidebar.php'; ?>
 
     <div class="ds-main">
-        <?php include 'components/header.php'; ?>
+        <?php 
+        $page_title = 'CETAK RESI PENYEWAAN';
+        include 'components/header.php'; 
+        ?>
         <?php include 'components/resi.php'; ?>
         <?php include 'components/footer.php'; ?>
     </div>
