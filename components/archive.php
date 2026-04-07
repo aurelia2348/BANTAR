@@ -15,11 +15,11 @@
 
     <!-- Tabs -->
     <div class="ds-tabs">
-        <div class="ds-tab active">ALL MASTERPIECES</div>
-        <div class="ds-tab">PERIOD DRAMA</div>
-        <div class="ds-tab">FUTURIST COUTURE</div>
-        <div class="ds-tab">AVANT-GARDE</div>
-        <div class="ds-tab">EDITORIAL SETS</div>
+        <div class="ds-tab active">ALL DESIGNERS</div>
+        <div class="ds-tab">BARA EXCLUSIVES</div>
+        <div class="ds-tab">ALEXANDER MCQUEEN</div>
+        <div class="ds-tab">IRIS VAN HERPEN</div>
+        <div class="ds-tab">THIERRY MUGLER</div>
     </div>
 
     <!-- Grid -->

@@ -30,32 +30,7 @@
                 </div>
             </div>
             
-            <!-- Simple SVG mockup for the chart lines -->
-            <svg class="ds-chart-svg" viewBox="0 0 1000 200" preserveAspectRatio="none">
-                <!-- Last Year Line (Dashed) -->
-                <path d="M0,150 C100,120 200,180 300,100 C400,20 500,160 600,80 C700,0 800,140 900,40 C950,0 1000,50 1000,50" 
-                      fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-dasharray="8,8" />
-                
-                <!-- This Year Line (Gold) -->
-                <path d="M0,130 C150,130 250,50 350,80 C450,110 500,40 650,90 C800,140 850,20 1000,30" 
-                      fill="none" stroke="var(--accent-gold)" stroke-width="3" />
-                      
-                <circle cx="850" cy="20" r="4" fill="var(--accent-gold)" />
-            </svg>
-            <div class="ds-chart-x-axis">
-                <span>JAN</span>
-                <span>FEB</span>
-                <span>MAR</span>
-                <span>APR</span>
-                <span>MAY</span>
-                <span>JUN</span>
-                <span>JUL</span>
-                <span>AUG</span>
-                <span>SEP</span>
-                <span>OCT</span>
-                <span>NOV</span>
-                <span>DEC</span>
-            </div>
+            <div id="rentalPerformanceChart" style="min-height: 250px; margin-top: 10px;"></div>
         </div>
 
         <!-- Monthly Income -->
@@ -154,3 +129,67 @@
 
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var options = {
+            series: [{
+                name: 'This Year (2024)',
+                data: [45, 52, 38, 45, 60, 58, 65, 80, 75, 95, 110, 120]
+            }, {
+                name: 'Last Year (2023)',
+                data: [35, 41, 36, 40, 50, 48, 55, 65, 58, 70, 85, 90]
+            }],
+            chart: {
+                height: 260,
+                type: 'area',
+                toolbar: { show: false },
+                fontFamily: 'Inter, sans-serif',
+                background: 'transparent'
+            },
+            colors: ['#E5C158', '#8C92A6'],
+            dataLabels: { enabled: false },
+            stroke: {
+                curve: 'smooth',
+                width: [3, 2],
+                dashArray: [0, 8]
+            },
+            fill: {
+                type: ['gradient', 'solid'],
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.4,
+                    opacityTo: 0.05,
+                    stops: [0, 90, 100]
+                },
+                opacity: [0.8, 0.1]
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                labels: { style: { colors: '#8C92A6', fontSize: '10px', cssClass: 'apexcharts-xaxis-label' } },
+                axisBorder: { show: false },
+                axisTicks: { show: false }
+            },
+            yaxis: {
+                labels: { show: false }
+            },
+            grid: {
+                borderColor: 'rgba(255, 255, 255, 0.05)',
+                strokeDashArray: 4,
+                yaxis: { lines: { show: true } },
+                xaxis: { lines: { show: false } },
+                padding: { top: 0, right: 0, bottom: 0, left: 10 }
+            },
+            legend: { show: false },
+            theme: { mode: 'dark' },
+            tooltip: {
+                theme: 'dark',
+                y: { formatter: function (val) { return val + " rentals" } }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#rentalPerformanceChart"), options);
+        chart.render();
+    });
+</script>

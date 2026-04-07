@@ -12,12 +12,9 @@
 
 <div class="dashboard-wrapper">
     <?php include 'components/sidebar.php'; ?>
-    
+
     <div class="ds-main">
-        <?php 
-        $page_title = 'RENTAL HISTORY';
-        include 'components/header.php'; 
-        ?>
+        <?php include 'components/header.php'; ?>
         <?php include 'components/rental-history.php'; ?>
         <?php include 'components/footer.php'; ?>
     </div>

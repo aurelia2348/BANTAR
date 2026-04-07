@@ -11,12 +11,9 @@
 
 <div class="dashboard-wrapper">
     <?php include 'components/sidebar.php'; ?>
-    
+
     <div class="ds-main">
-        <?php 
-        $page_title = 'FORM TAMBAH SEWA';
-        include 'components/header.php'; 
-        ?>
+        <?php include 'components/header.php'; ?>
         <?php include 'components/tambah-sewa.php'; ?>
         <?php include 'components/footer.php'; ?>
     </div>

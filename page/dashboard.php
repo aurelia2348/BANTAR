@@ -12,12 +12,9 @@
 
 <div class="dashboard-wrapper">
     <?php include 'components/sidebar.php'; ?>
-    
+
     <div class="ds-main">
-        <?php 
-        $page_title = 'BANTAR DASHBOARD';
-        include 'components/header.php'; 
-        ?>
+        <?php include 'components/header.php'; ?>
         <?php include 'components/main.php'; ?>
         <?php include 'components/footer.php'; ?>
     </div>
