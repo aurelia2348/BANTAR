@@ -63,14 +63,14 @@
                     </td>
                     <td>
                         <div class="rh-status-pill rh-status-active">
-                            <span class="rh-status-dot"></span> ACTIVE
+                            <span class="rh-status-dot"></span> BELUM SELESAI
                         </div>
                     </td>
                     <td style="text-align: right;">
-                        <span class="rh-col-amount">$1,240.00</span>
+                        <span class="rh-col-amount">Rp 1.240.000</span>
                     </td>
                     <td style="text-align: right; white-space: nowrap; padding-right: 24px;">
-                        <button class="rh-btn-action rh-btn-mark" onclick="event.stopPropagation(); simulateReturn(this);"><i class="ph ph-check-circle"></i> RETURN</button>
+                        <button class="rh-btn-action rh-btn-mark" onclick="event.stopPropagation(); simulateReturn(this);"><i class="ph ph-check-circle"></i> TANDAI SELESAI</button>
                     </td>
                 </tr>
 
@@ -97,14 +97,14 @@
                     </td>
                     <td>
                         <div class="rh-status-pill rh-status-completed">
-                            <span class="rh-status-dot"></span> COMPLETED
+                            <span class="rh-status-dot"></span> SELESAI
                         </div>
                     </td>
                     <td style="text-align: right;">
-                        <span class="rh-col-amount">$850.00</span>
+                        <span class="rh-col-amount">Rp 850.000</span>
                     </td>
                     <td style="text-align: right; white-space: nowrap; padding-right: 24px;">
-                        <button class="rh-btn-action rh-btn-disabled" disabled onclick="event.stopPropagation();"><i class="ph ph-lock-key"></i> CLOSED</button>
+                        <button class="rh-btn-action rh-btn-disabled" disabled onclick="event.stopPropagation();"><i class="ph ph-lock-key"></i> SELESAI</button>
                     </td>
                 </tr>
 
@@ -130,15 +130,15 @@
                         <div class="rh-col-date">Oct 01,<br>2023</div>
                     </td>
                     <td>
-                        <div class="rh-status-pill rh-status-overdue">
-                            <span class="rh-status-dot"></span> OVERDUE
+                        <div class="rh-status-pill rh-status-active">
+                            <span class="rh-status-dot"></span> BELUM SELESAI
                         </div>
                     </td>
                     <td style="text-align: right;">
-                        <span class="rh-col-amount">$3,400.00</span>
+                        <span class="rh-col-amount">Rp 3.400.000</span>
                     </td>
                     <td style="text-align: right; white-space: nowrap; padding-right: 24px;">
-                        <button class="rh-btn-action rh-btn-urgent" onclick="event.stopPropagation(); simulateRemind(this);"><i class="ph ph-warning-circle"></i> REMIND</button>
+                        <button class="rh-btn-action rh-btn-mark" onclick="event.stopPropagation(); simulateReturn(this);"><i class="ph ph-check-circle"></i> TANDAI SELESAI</button>
                     </td>
                 </tr>
 
@@ -165,14 +165,14 @@
                     </td>
                     <td>
                         <div class="rh-status-pill rh-status-completed">
-                            <span class="rh-status-dot"></span> COMPLETED
+                            <span class="rh-status-dot"></span> SELESAI
                         </div>
                     </td>
                     <td style="text-align: right;">
-                        <span class="rh-col-amount">$2,100.00</span>
+                        <span class="rh-col-amount">Rp 2.100.000</span>
                     </td>
                     <td style="text-align: right; white-space: nowrap; padding-right: 24px;">
-                        <button class="rh-btn-action rh-btn-disabled" disabled onclick="event.stopPropagation();"><i class="ph ph-lock-key"></i> CLOSED</button>
+                        <button class="rh-btn-action rh-btn-disabled" disabled onclick="event.stopPropagation();"><i class="ph ph-lock-key"></i> SELESAI</button>
                     </td>
                 </tr>
 
@@ -193,6 +193,50 @@
             <span>...</span>
             <span class="rh-pag-num">32</span>
             <span class="rh-pag-btn">Next &gt;</span>
+        </div>
+    </div>
+
+    <!-- Return Form Modal -->
+    <div class="rh-modal-overlay" id="returnFormModal">
+        <div class="rh-modal-content" style="max-width: 500px; padding: 32px;">
+            <i class="ph ph-x rh-modal-close" onclick="closeReturnModal()"></i>
+            
+            <h2 class="rh-modal-title" style="margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px;">Kelola Transaksi</h2>
+
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 1px;">NAMA PENYEWA</label>
+                <input type="text" id="rf-tenant" readonly style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-secondary); outline: none;">
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 1px;">NAMA BARANG &amp; JUMLAH</label>
+                <input type="text" id="rf-item" readonly style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-secondary); outline: none;">
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 1px;">TANGGAL KEMBALI</label>
+                <input type="text" id="rf-return-date" readonly style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-secondary); outline: none;">
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 1px;">TANGGAL KEMBALI SEBENARNYA</label>
+                <input type="date" id="rf-actual-date" style="width: 100%; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #fff; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 1px;">DENDA KETERLAMBATAN (RP)</label>
+                <input type="number" id="rf-late-fee" value="0" readonly style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-secondary); outline: none;">
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 1px;">DENDA LAIN-LAIN (RP)</label>
+                <input type="number" id="rf-other-fee" value="0" style="width: 100%; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #fff; outline: none;">
+            </div>
+
+            <div style="display: flex; gap: 16px;">
+                <button class="rh-btn-action" style="flex: 1; justify-content: center; background: var(--accent-gold); color: #000; border: none; padding: 12px;" onclick="confirmReturn()">SIMPAN</button>
+                <button class="rh-btn-action" style="flex: 1; justify-content: center; background: transparent; border: 1px solid rgba(255,255,255,0.2); padding: 12px;" onclick="closeReturnModal()">TUTUP</button>
+            </div>
         </div>
     </div>
 
@@ -295,33 +339,71 @@
 
     // Close when clicking outside content
     window.onclick = function(event) {
-        var modal = document.getElementById('receiptModal');
-        if (event.target == modal) {
+        var receiptModal = document.getElementById('receiptModal');
+        var returnModal = document.getElementById('returnFormModal');
+        if (event.target == receiptModal) {
             closeReceiptModal();
+        }
+        if (event.target == returnModal) {
+            closeReturnModal();
         }
     }
 
     // Interactive UI Simulation
     function simulateReturn(btn) {
         const tr = btn.closest('tr');
-        const pill = tr.querySelector('.rh-status-pill');
+        const tenantName = tr.querySelector('.rh-col-tenant-name').innerText;
+        const costumeName = tr.querySelector('.rh-col-costume-name').innerText;
         
-        // Add a small fade effect
-        pill.style.opacity = '0';
-        btn.style.transform = 'scale(0.95)';
-        btn.style.opacity = '0.5';
+        // Get date and format string "Oct 26, 2023"
+        let returnDateTxt = tr.querySelectorAll('td')[4].querySelector('.rh-col-date').innerText.trim().replace(/\n/g, ' ');
+        
+        document.getElementById('rf-tenant').value = tenantName;
+        document.getElementById('rf-item').value = costumeName + " x1";
+        document.getElementById('rf-return-date').value = returnDateTxt;
+        
+        // Auto set actual date to today
+        const today = new Date().toISOString().split('T')[0];
+        const actualDateInput = document.getElementById('rf-actual-date');
+        actualDateInput.value = today;
 
-        setTimeout(() => {
-            // Change pill to COMPLETED
-            pill.classList.remove('rh-status-active');
-            pill.classList.add('rh-status-completed');
-            pill.innerHTML = '<span class="rh-status-dot"></span> COMPLETED';
-            pill.style.opacity = '1';
+        window.currentReturnBtn = btn;
+        document.getElementById('returnFormModal').style.display = 'flex';
+        
+        // Trigger event to calculate potential late fees
+        actualDateInput.dispatchEvent(new Event('change'));
+    }
 
-            // Change button to CLOSED
-            const tdAction = btn.parentElement;
-            tdAction.innerHTML = '<button class="rh-btn-action rh-btn-disabled" disabled onclick="event.stopPropagation();"><i class="ph ph-lock-key"></i> CLOSED</button>';
-        }, 300);
+    function closeReturnModal() {
+        document.getElementById('returnFormModal').style.display = 'none';
+        window.currentReturnBtn = null;
+    }
+
+    function confirmReturn() {
+        const btn = window.currentReturnBtn;
+        closeReturnModal();
+        if (btn) {
+            const tr = btn.closest('tr');
+            const pill = tr.querySelector('.rh-status-pill');
+            
+            // Add a small fade effect
+            pill.style.opacity = '0';
+            btn.style.transform = 'scale(0.95)';
+            btn.style.opacity = '0.5';
+
+            setTimeout(() => {
+                // Change pill to COMPLETED
+                pill.classList.remove('rh-status-active');
+                pill.classList.remove('rh-status-overdue');
+                pill.classList.add('rh-status-completed');
+                pill.innerHTML = '<span class="rh-status-dot"></span> SELESAI';
+                pill.style.opacity = '1';
+
+                // Change button to CLOSED
+                const tdAction = btn.parentElement;
+                tdAction.innerHTML = '<button class="rh-btn-action rh-btn-disabled" disabled onclick="event.stopPropagation();"><i class="ph ph-lock-key"></i> SELESAI</button>';
+            }, 300);
+        }
     }
 
     function simulateRemind(btn) {
@@ -340,4 +422,25 @@
             btn.disabled = false;
         }, 2000);
     }
+    document.getElementById('rf-actual-date').addEventListener('change', function() {
+        const expectedStr = document.getElementById('rf-return-date').value;
+        const expectedDate = new Date(expectedStr);
+        const actualDate = new Date(this.value);
+        const lateFeeInput = document.getElementById('rf-late-fee');
+        
+        if (!isNaN(expectedDate.getTime()) && !isNaN(actualDate.getTime())) {
+            expectedDate.setHours(0,0,0,0);
+            actualDate.setHours(0,0,0,0);
+            
+            if (actualDate > expectedDate) {
+                const diffTime = actualDate.getTime() - expectedDate.getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                lateFeeInput.value = diffDays * 25000;
+            } else {
+                lateFeeInput.value = 0;
+            }
+        } else {
+            lateFeeInput.value = 0;
+        }
+    });
 </script>

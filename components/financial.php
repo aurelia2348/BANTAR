@@ -64,8 +64,11 @@
         <table class="fin-table">
             <thead>
                 <tr>
+                    <th>TANGGAL TRANSAKSI</th>
                     <th>COSTUME / CATEGORY</th>
-                    <th>RENTAL FEE (+ FINES)</th>
+                    <th>DENDA KETERLAMBATAN</th>
+                    <th>DENDA LAINNYA</th>
+                    <th>RENTAL FEE</th>
                     <th>BANTAR SHARE</th>
                     <th>DESIGNER SHARE</th>
                     <th>MODEL SHARE</th>
@@ -76,6 +79,9 @@
                 <!-- Row 1: Busana Desainer dengan Denda -->
                 <tr>
                     <td>
+                        <span class="fin-val-main">26 Oct 2023</span>
+                    </td>
+                    <td>
                         <div class="fin-col-collection">
                             <div class="fin-col-details" style="margin-left: 0;">
                                 <h4>Victorian Noir</h4>
@@ -84,20 +90,22 @@
                         </div>
                     </td>
                     <td>
-                        <span class="fin-val-main">Rp 5.500.000</span>
-                        <span class="fin-val-sub">Rp 5Jt Sewa + Rp 500rb Denda</span>
+                        <span class="fin-val-main" style="color: #F44336;">Rp 0</span>
+                    </td>
+                    <td>
+                        <span class="fin-val-main" style="color: #F44336;">Rp 500.000</span>
+                    </td>
+                    <td>
+                        <span class="fin-val-main">Rp 5.000.000</span>
                     </td>
                     <td>
                         <span class="fin-val-main fin-val-gold">Rp 500.000</span>
-                        <span class="fin-val-sub">10% DARI SEWA</span>
                     </td>
                     <td>
                         <span class="fin-val-main" style="color: #8CA3C5;">Rp 5.000.000</span>
-                        <span class="fin-val-sub">90% SEWA + 100% DENDA</span>
                     </td>
                     <td>
                         <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
-                        <span class="fin-val-sub">NOT APPLICABLE</span>
                     </td>
                     <td>
                         <span class="fin-badge fin-badge-cleared">CLEARED</span>
@@ -107,6 +115,9 @@
                 <!-- Row 2: Kostum Karnaval INCLUDE Model -->
                 <tr>
                     <td>
+                        <span class="fin-val-main">05 Nov 2023</span>
+                    </td>
+                    <td>
                         <div class="fin-col-collection">
                             <div class="fin-col-details" style="margin-left: 0;">
                                 <h4>Garuda Nusantara</h4>
@@ -115,20 +126,22 @@
                         </div>
                     </td>
                     <td>
-                        <span class="fin-val-main">Rp 3.000.000</span>
-                        <span class="fin-val-sub">HARGA BUNDLE MODEL</span>
-                    </td>
-                    <td>
-                        <span class="fin-val-main fin-val-gold">Rp 2.100.000</span>
-                        <span class="fin-val-sub">70% KEPEMILIKAN</span>
+                        <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
                     </td>
                     <td>
                         <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
-                        <span class="fin-val-sub">NO DESIGNER CUT</span>
+                    </td>
+                    <td>
+                        <span class="fin-val-main">Rp 3.000.000</span>
+                    </td>
+                    <td>
+                        <span class="fin-val-main fin-val-gold">Rp 2.100.000</span>
+                    </td>
+                    <td>
+                        <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
                     </td>
                     <td>
                         <span class="fin-val-main" style="color: #C5A39B;">Rp 900.000</span>
-                        <span class="fin-val-sub">30% MODEL FEE</span>
                     </td>
                     <td>
                         <span class="fin-badge fin-badge-pending">PENDING</span>
@@ -138,6 +151,9 @@
                 <!-- Row 3: Kostum Karnaval TANPA Model + Denda -->
                 <tr>
                     <td>
+                        <span class="fin-val-main">11 Nov 2023</span>
+                    </td>
+                    <td>
                         <div class="fin-col-collection">
                             <div class="fin-col-details" style="margin-left: 0;">
                                 <h4>Nusantara Warrior</h4>
@@ -146,20 +162,22 @@
                         </div>
                     </td>
                     <td>
-                        <span class="fin-val-main">Rp 2.200.000</span>
-                        <span class="fin-val-sub">Rp 2Jt Sewa + Rp 200rb Denda</span>
+                        <span class="fin-val-main" style="color: #F44336;">Rp 200.000</span>
+                    </td>
+                    <td>
+                        <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
+                    </td>
+                    <td>
+                        <span class="fin-val-main">Rp 2.000.000</span>
                     </td>
                     <td>
                         <span class="fin-val-main fin-val-gold">Rp 2.200.000</span>
-                        <span class="fin-val-sub">100% SEWA + 100% DENDA</span>
                     </td>
                     <td>
                         <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
-                        <span class="fin-val-sub">NO DESIGNER CUT</span>
                     </td>
                     <td>
                         <span class="fin-val-main" style="color: var(--text-secondary);">—</span>
-                        <span class="fin-val-sub">NO MODEL CHOSEN</span>
                     </td>
                     <td>
                         <span class="fin-badge fin-badge-cleared">CLEARED</span>

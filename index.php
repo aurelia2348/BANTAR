@@ -1,3 +1,8 @@
+<?php
+session_start();
+$page = isset($_GET['page']) ? $_GET['page'] : 'login'; 
+$is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-sewa' || $page == 'tambah-busana' || $page == 'financial' || $page == 'resi' || $page == 'rental-history' || $page == 'dashboard-desainer' || $page == 'history-desainer' || $page == 'login'); 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,10 +14,6 @@
     <title>Document</title>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-<?php 
-$page = isset($_GET['page']) ? $_GET['page'] : 'dashboard'; 
-$is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-sewa' || $page == 'tambah-busana' || $page == 'financial' || $page == 'resi' || $page == 'rental-history'); 
-?>
 
 <body class="d-flex flex-column min-vh-100 <?php echo $is_dashboard ? 'bg-dark' : ''; ?>">
     <?php if (!$is_dashboard) include 'components/navbar.php'; ?>
@@ -42,6 +43,10 @@ $is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-
             include 'page/rental-history.php';
         } elseif ($page == 'tambah-busana') {
             include 'page/tambah-busana.php';
+        } elseif ($page == 'dashboard-desainer') {
+            include 'page/dashboard-desainer.php';
+        } elseif ($page == 'history-desainer') {
+            include 'page/history-desainer.php';
         } else {
             echo "<div class='mt-4'><h2>Halaman tidak ditemukan</h2></div>";
         }

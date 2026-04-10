@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="css/dashboard.css?v=<?= time(); ?>">
+<link rel="stylesheet" href="css/rental-history.css?v=<?= time(); ?>">
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-<!-- Override Bootstrap's container padding for this specific page so dashboard takes full width -->
 <style>
     .container.flex-grow-1 {
         max-width: 100% !important;
@@ -11,14 +11,14 @@
 </style>
 
 <div class="dashboard-wrapper">
-    <?php include 'components/sidebar.php'; ?>
+    <?php include 'components/sidebar-desainer.php'; ?>
 
     <div class="ds-main">
         <?php 
-        $page_title = 'BANTAR DASHBOARD';
+        $page_title = 'ROYALTY HISTORY';
         include 'components/header.php'; 
         ?>
-        <?php include 'components/main.php'; ?>
+        <?php include 'components/history-desainer.php'; ?>
         <?php include 'components/footer.php'; ?>
     </div>
 </div>

@@ -6,7 +6,20 @@
         </div>
         <div class="ds-period">
             <span>CURRENT PERIOD</span>
-            <h3>Oct — Dec 2024</h3>
+            <div class="ds-custom-dropdown" id="periodDropdown">
+                <div class="ds-dropdown-header">
+                    <i class="ph ph-calendar-blank" style="color: var(--accent-gold); font-size: 16px;"></i>
+                    <div class="ds-dropdown-selected" id="periodSelectedText">Oct — Dec 2024</div>
+                    <i class="ph ph-caret-down ds-caret" style="color: var(--text-secondary); font-size: 12px;"></i>
+                </div>
+                <div class="ds-dropdown-list">
+                    <div class="ds-dropdown-item" data-value="today">Today</div>
+                    <div class="ds-dropdown-item" data-value="this-week">This Week</div>
+                    <div class="ds-dropdown-item" data-value="this-month">This Month</div>
+                    <div class="ds-dropdown-item active" data-value="q4-2024">Oct — Dec 2024</div>
+                    <div class="ds-dropdown-item" data-value="year-to-date">Year to Date (YTD)</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -38,7 +51,7 @@
             <p style="font-size: 10px; color: var(--accent-gold); letter-spacing: 1px; margin: 0; text-transform: uppercase;">
                 MONTHLY INCOME PERFORMANCE
             </p>
-            <div class="ds-income-value">$142.5K</div>
+            <div class="ds-income-value">Rp 142,5 Jt</div>
             <div class="ds-income-change">
                 <i class="ph-bold ph-trend-up"></i>
                 +18.2% vs last month
@@ -54,7 +67,7 @@
             <div class="ds-hist-item">
                 <div class="ds-hist-top">
                     <span style="color: var(--text-secondary);">CURRENT MONTH</span>
-                    <span class="val">$142,500</span>
+                    <span class="val">Rp 142,5 Jt</span>
                 </div>
                 <div class="ds-progress-bar">
                     <div class="ds-progress-fill gold" style="width: 85%;"></div>
@@ -64,7 +77,7 @@
             <div class="ds-hist-item">
                 <div class="ds-hist-top">
                     <span style="color: var(--text-secondary);">PREVIOUS MONTH</span>
-                    <span class="val">$120,540</span>
+                    <span class="val">Rp 120,5 Jt</span>
                 </div>
                 <div class="ds-progress-bar">
                     <div class="ds-progress-fill gray" style="width: 70%;"></div>
@@ -81,10 +94,9 @@
                 <p>Curated from the 2023 Noir Collection.<br>Exceptional demand predicted for Winter 2024.</p>
                 <div class="ds-trending-bottom">
                     <div class="ds-trending-stat">
-                        <span>RENTAL YIELD</span>
-                        <strong>$1,250 / Week</strong>
+                        <span>RENTAL YIELD (ESTIMASI)</span>
+                        <strong>Rp 18,5 Jt / Bulan</strong>
                     </div>
-                    <button class="ds-btn-outline">VIEW ANALYTICS</button>
                 </div>
             </div>
         </div>
@@ -191,5 +203,36 @@
 
         var chart = new ApexCharts(document.querySelector("#rentalPerformanceChart"), options);
         chart.render();
+
+        // Custom Dropdown Logic
+        const dropdown = document.getElementById("periodDropdown");
+        const header = dropdown.querySelector(".ds-dropdown-header");
+        const list = dropdown.querySelector(".ds-dropdown-list");
+        const selectedText = document.getElementById("periodSelectedText");
+        const items = dropdown.querySelectorAll(".ds-dropdown-item");
+
+        header.addEventListener("click", function(e) {
+            e.stopPropagation();
+            list.classList.toggle("show");
+            header.classList.toggle("active");
+        });
+
+        items.forEach(item => {
+            item.addEventListener("click", function(e) {
+                e.stopPropagation();
+                items.forEach(i => i.classList.remove("active"));
+                this.classList.add("active");
+                selectedText.innerText = this.innerText;
+                list.classList.remove("show");
+                header.classList.remove("active");
+            });
+        });
+
+        document.addEventListener("click", function(e) {
+            if (!dropdown.contains(e.target)) {
+                list.classList.remove("show");
+                header.classList.remove("active");
+            }
+        });
     });
 </script>
