@@ -101,44 +101,58 @@
             </div>
         </div>
 
-        <!-- Regional Performance -->
-        <div class="ds-card ds-widget-regional">
-            <h6 class="ds-subtitle" style="color:var(--text-primary); font-size: 16px; font-weight: 500; font-family: var(--font-primary); text-transform: none; letter-spacing: 0;">Regional Performance</h6>
-            
-            <div class="ds-regional-item">
-                <div class="ds-reg-label">PARIS ATELIER</div>
-                <div class="ds-reg-bar"><div class="ds-reg-fill yellow" style="width: 92%;"></div></div>
-                <div class="ds-reg-val">92%</div>
+    </div>
+
+    <!-- Forecast Section Holt Winters -->
+    <div class="fin-ledger-section" style="margin-top: 32px; border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; background: rgba(0,0,0,0.4); padding-bottom: 8px;">
+        <div class="fin-ledger-header" style="border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding: 20px;">
+            <div>
+                <h3 class="fin-ledger-title" style="color: var(--accent-gold); display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600;">
+                    <i class="ph-fill ph-magic-wand"></i> HOLT-WINTERS FORECAST: 30-DAY OUTLOOK
+                </h3>
+                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; letter-spacing: 1px; text-transform: uppercase;">Predictive Modeling Based on T-3 Months Trajectory</p>
             </div>
-            <div class="ds-regional-item">
-                <div class="ds-reg-label">LONDON ARCHIVE</div>
-                <div class="ds-reg-bar"><div class="ds-reg-fill yellow" style="width: 78%;"></div></div>
-                <div class="ds-reg-val">78%</div>
+            <div style="padding: 4px 12px; font-size: 10px; letter-spacing: 1px; font-weight: 600; border-radius: 4px; background: rgba(212, 175, 55, 0.1); color: var(--accent-gold); border: 1px solid rgba(212, 175, 55, 0.3);">ACTIVE MODEL</div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; padding: 24px;">
+            <!-- Projected Revenue Chart -->
+            <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                    <div>
+                        <div style="font-size: 10px; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 4px;">EST. REVENUE TRAJECTORY</div>
+                        <div style="font-size: 20px; font-weight: 500; font-family: var(--font-heading); color: #fff;">Rp 98.400.000 <span style="font-size: 11px; color: #4CAF50; font-weight: normal; font-family: 'Inter', sans-serif;"><i class="ph ph-trend-up"></i> +16.4%</span></div>
+                    </div>
+                    <div style="padding: 4px 8px; border-radius: 4px; background: rgba(76, 175, 80, 0.1); color: #4CAF50; font-size: 9px; font-weight: bold; letter-spacing: 1px;">
+                        HIGH CONFIDENCE
+                    </div>
+                </div>
+                <div id="holtWintersChart" style="min-height: 180px; margin-top: 10px;"></div>
             </div>
-            <div class="ds-regional-item">
-                <div class="ds-reg-label">MILAN SUITE</div>
-                <div class="ds-reg-bar"><div class="ds-reg-fill blue" style="width: 84%;"></div></div>
-                <div class="ds-reg-val">84%</div>
-            </div>
-            <div class="ds-regional-item">
-                <div class="ds-reg-label">NEW YORK VAULT</div>
-                <div class="ds-reg-bar"><div class="ds-reg-fill peach" style="width: 65%;"></div></div>
-                <div class="ds-reg-val">65%</div>
+
+            <!-- Demand Shift -->
+            <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                <div style="font-size: 10px; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 24px;">CATEGORY DEMAND SHIFT</div>
+                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 24px;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px;">
+                            <span style="color: #8CA3C5; font-weight: 500; font-size: 13px;">Busana Desainer</span> <span style="color: #fff; font-size: 13px;">65%</span>
+                        </div>
+                        <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                            <div style="height: 100%; width: 65%; background: #8CA3C5; border-radius: 3px;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px;">
+                            <span style="color: #C5A39B; font-weight: 500; font-size: 13px;">Kostum Karnaval</span> <span style="color: #fff; font-size: 13px;">35%</span>
+                        </div>
+                        <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                            <div style="height: 100%; width: 35%; background: #C5A39B; border-radius: 3px;"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Insight Banner -->
-        <div class="ds-card ds-widget-insight">
-            <div class="ds-insight-icon">
-                <i class="ph-fill ph-magic-wand"></i>
-            </div>
-            <div class="ds-insight-text">
-                <p>"The Golden Hour Collection" is gaining viral momentum.</p>
-                <span>AI CURATOR INSIGHT — ACTION REQUIRED: INCREASE AVAILABILITY IN PARIS</span>
-            </div>
-            <i class="ph ph-x ds-insight-close"></i>
-        </div>
-
     </div>
 </div>
 
@@ -203,6 +217,72 @@
 
         var chart = new ApexCharts(document.querySelector("#rentalPerformanceChart"), options);
         chart.render();
+
+        // Holt-Winters Forecast Chart
+        var hwOptions = {
+            series: [{
+                name: 'Historical (Actual)',
+                data: [65, 72, 60, 85, 95] // Past 5 months
+            }, {
+                name: 'Forecast (Predicted)',
+                data: [null, null, null, null, 95, 110, 115] // Continues from month 5 to next 2 months
+            }],
+            chart: {
+                height: 190,
+                type: 'area',
+                toolbar: { show: false },
+                fontFamily: 'Inter, sans-serif',
+                background: 'transparent'
+            },
+            colors: ['#8C92A6', '#4CAF50'],
+            dataLabels: { enabled: false },
+            stroke: {
+                curve: 'smooth',
+                width: [2, 3],
+                dashArray: [0, 6] // Dashed line for prediction
+            },
+            fill: {
+                type: ['solid', 'gradient'],
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.3,
+                    opacityTo: 0.05,
+                    stops: [0, 90, 100]
+                },
+                opacity: [0.1, 0.4]
+            },
+            xaxis: {
+                categories: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct (Now)', 'Nov', 'Dec'],
+                labels: { style: { colors: '#8C92A6', fontSize: '9px', cssClass: 'apexcharts-xaxis-label' } },
+                axisBorder: { show: false },
+                axisTicks: { show: false }
+            },
+            yaxis: {
+                show: false,
+                min: 40
+            },
+            grid: {
+                borderColor: 'rgba(255, 255, 255, 0.05)',
+                strokeDashArray: 4,
+                yaxis: { lines: { show: true } },
+                xaxis: { lines: { show: false } },
+                padding: { top: 0, right: 0, bottom: 0, left: 10 }
+            },
+            legend: { 
+                position: 'top', 
+                horizontalAlign: 'right', 
+                markers: { radius: 12 },
+                fontSize: '10px',
+                labels: { colors: '#8C92A6' }
+            },
+            theme: { mode: 'dark' },
+            tooltip: {
+                theme: 'dark'
+            }
+        };
+
+        var hwChart = new ApexCharts(document.querySelector("#holtWintersChart"), hwOptions);
+        hwChart.render();
 
         // Custom Dropdown Logic
         const dropdown = document.getElementById("periodDropdown");

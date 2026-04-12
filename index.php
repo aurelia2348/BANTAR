@@ -1,7 +1,7 @@
 <?php
 session_start();
 $page = isset($_GET['page']) ? $_GET['page'] : 'login'; 
-$is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-sewa' || $page == 'tambah-busana' || $page == 'financial' || $page == 'resi' || $page == 'rental-history' || $page == 'dashboard-desainer' || $page == 'history-desainer' || $page == 'login'); 
+$is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-sewa' || $page == 'tambah-busana' || $page == 'edit-busana' || $page == 'financial' || $page == 'resi' || $page == 'rental-history' || $page == 'dashboard-desainer' || $page == 'history-desainer' || $page == 'login'); 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,6 +43,8 @@ $is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-
             include 'page/rental-history.php';
         } elseif ($page == 'tambah-busana') {
             include 'page/tambah-busana.php';
+        } elseif ($page == 'edit-busana') {
+            include 'page/edit-busana.php';
         } elseif ($page == 'dashboard-desainer') {
             include 'page/dashboard-desainer.php';
         } elseif ($page == 'history-desainer') {

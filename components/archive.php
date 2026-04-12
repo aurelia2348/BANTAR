@@ -218,9 +218,15 @@
                     </div>
                 </div>
                 
-                <div style="margin-top: auto; display: flex; gap: 16px;">
-                    <button class="ds-btn-outline" style="flex: 1;" onclick="closeQuickView()">TUTUP</button>
-                    <button id="qvActionBtn" class="ds-btn-primary-large" style="flex: 2; padding: 12px; width: auto;" onclick="window.location.href='index.php?page=tambah-sewa'"><i class="ph ph-shopping-bag"></i> LANJUTKAN KE SEWA</button>
+                <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; gap: 12px;">
+                        <button class="ds-btn-outline" style="flex: 1; border-color: rgba(255,255,255,0.2);" onclick="window.location.href='index.php?page=edit-busana'"><i class="ph ph-pencil-simple"></i> EDIT ITEM</button>
+                        <button class="ds-btn-outline" style="flex: 1; border-color: #F44336; color: #F44336;" onclick="deleteAdminItem()"><i class="ph ph-trash"></i> DELETE</button>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="ds-btn-outline" style="flex: 1; opacity: 0.6; border: none; background: rgba(255,255,255,0.05);" onclick="closeQuickView()">TUTUP</button>
+                        <button id="qvActionBtn" class="ds-btn-primary-large" style="flex: 2; padding: 12px; width: auto;" onclick="window.location.href='index.php?page=tambah-sewa'"><i class="ph ph-shopping-bag"></i> LANJUTKAN KE SEWA</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -242,6 +248,9 @@ function filterCat(elem, cat) {
 }
 
 function openQuickView(imgPath, title, cat, price, status, statusColor, desc, fine, stockAvail, stockTotal) {
+    // Capture the event to get the card reference for deletion
+    window.currentQuickViewCard = event ? event.currentTarget.closest('.ds-catalog-card') : null;
+    
     document.getElementById('qvImage').src = imgPath;
     document.getElementById('qvTitle').innerText = title;
     document.getElementById('qvCat').innerText = cat;
@@ -283,7 +292,22 @@ function closeQuickView() {
     modal.classList.remove('show');
     setTimeout(() => {
         modal.style.display = 'none';
+        window.currentQuickViewCard = null;
     }, 300);
+}
+
+function deleteAdminItem() {
+    if(confirm("Apakah Anda yakin ingin menghapus item ini dari arsip katalog? Tindakan ini tidak dapat dibatalkan.")) {
+        closeQuickView();
+        if(window.currentQuickViewCard) {
+            window.currentQuickViewCard.style.transition = 'all 0.4s ease';
+            window.currentQuickViewCard.style.transform = 'scale(0.9)';
+            window.currentQuickViewCard.style.opacity = '0';
+            setTimeout(() => {
+                window.currentQuickViewCard.remove();
+            }, 400);
+        }
+    }
 }
 
 // Close when clicking outside content
