@@ -53,8 +53,11 @@
           </div>
 
           <div class="busana-field mt-32">
-              <label>COSTUME PHILOSOPHY <span style="color:#F44336">*</span></label>
-              <textarea id="costumeDesc" class="busana-textarea" placeholder="The narrative soul of this creation..." oninput="validateBusanaInput(this, 'errDesc')">Sebuah mahakarya Haute Couture dari Bara Exclusives. Menyatukan tekstur velvet kelam dengan kerangka struktur emas yang tersembunyi. Sangat populer untuk sesi pemotretan bertema Gothic dan Met Gala.</textarea>
+              <label style="display: flex; justify-content: space-between; align-items: center;">
+                  <span>COSTUME PHILOSOPHY <span style="color:#F44336">*</span></span>
+                  <span id="charCount" style="font-weight: normal; color: var(--text-secondary); text-transform: none; letter-spacing: 0.5px;">0/1000 characters</span>
+              </label>
+              <textarea id="costumeDesc" class="busana-textarea" maxlength="1000" placeholder="The narrative soul of this creation..." oninput="validateBusanaInput(this, 'errDesc')">Sebuah mahakarya Haute Couture dari Bara Exclusives. Menyatukan tekstur velvet kelam dengan kerangka struktur emas yang tersembunyi. Sangat populer untuk sesi pemotretan bertema Gothic dan Met Gala.</textarea>
               <div id="errDesc" class="ds-error-msg" style="display:none; color:#F44336; font-size:9px; margin-top:4px;">Filosofi/Deskripsi kostum wajib diisi!</div>
           </div>
 
@@ -93,6 +96,30 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const textareas = document.querySelectorAll('.busana-textarea');
+        textareas.forEach(textarea => {
+            textarea.style.overflow = 'hidden'; 
+            const resize = () => {
+                textarea.style.height = '60px'; // Reset to base height to allow shrinking
+                textarea.style.height = textarea.scrollHeight + 'px';
+            };
+            textarea.addEventListener('input', resize);
+            resize(); // Run once on load
+        });
+
+        // Initialize Character Counter
+        const descArea = document.getElementById('costumeDesc');
+        const charCount = document.getElementById('charCount');
+        if (descArea && charCount) {
+            const updateCount = () => {
+                charCount.innerText = descArea.value.length + '/1000 characters';
+            };
+            descArea.addEventListener('input', updateCount);
+            updateCount(); // Run once on load
+        }
+    });
+
     function handleImageUpload(event) {
         const files = event.target.files;
         const container = document.getElementById('imagePreviewContainer');

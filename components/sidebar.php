@@ -35,17 +35,17 @@
         NEW RENTAL
     </button>
 
-    <ul class="ds-nav" style="flex: 0;">
-        <li class="ds-nav-item">
-            <a href="#" class="ds-nav-link">
+    <ul class="ds-nav" style="flex: 0; margin-bottom: 24px;">
+        <li class="ds-nav-item <?php echo isset($page) && $page == 'settings' ? 'active' : ''; ?>">
+            <a href="index.php?page=settings" class="ds-nav-link">
                 <i class="ph ph-gear"></i>
                 SETTINGS
             </a>
         </li>
-        <li class="ds-nav-item">
-            <a href="#" class="ds-nav-link">
-                <i class="ph ph-question"></i>
-                SUPPORT
+        <li class="ds-nav-item mt-2">
+            <a href="index.php?page=login" class="ds-nav-link">
+                <i class="ph ph-sign-out" style="color: #F44336;"></i>
+                <span style="color: #F44336;">LOG OUT</span>
             </a>
         </li>
     </ul>

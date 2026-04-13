@@ -1,7 +1,7 @@
 <?php
 session_start();
 $page = isset($_GET['page']) ? $_GET['page'] : 'login'; 
-$is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-sewa' || $page == 'tambah-busana' || $page == 'edit-busana' || $page == 'financial' || $page == 'resi' || $page == 'rental-history' || $page == 'dashboard-desainer' || $page == 'history-desainer' || $page == 'login'); 
+$is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'settings' || $page == 'tambah-sewa' || $page == 'tambah-busana' || $page == 'edit-busana' || $page == 'financial' || $page == 'resi' || $page == 'rental-history' || $page == 'dashboard-desainer' || $page == 'history-desainer' || $page == 'login'); 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,6 +49,8 @@ $is_dashboard = ($page == 'dashboard' || $page == 'archive' || $page == 'tambah-
             include 'page/dashboard-desainer.php';
         } elseif ($page == 'history-desainer') {
             include 'page/history-desainer.php';
+        } elseif ($page == 'settings') {
+            include 'page/settings.php';
         } else {
             echo "<div class='mt-4'><h2>Halaman tidak ditemukan</h2></div>";
         }

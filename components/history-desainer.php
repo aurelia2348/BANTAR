@@ -47,7 +47,7 @@
             </thead>
             <tbody>
                 <!-- Row 1 -->
-                <tr class="rh-row-clickable">
+                <tr class="rh-row-clickable" onclick="openTransactionModal(this)">
                     <td>
                         <div class="rh-col-id">ORD-<br>9821</div>
                     </td>
@@ -74,7 +74,7 @@
                 </tr>
 
                 <!-- Row 2 -->
-                <tr class="rh-row-clickable">
+                <tr class="rh-row-clickable" onclick="openTransactionModal(this)">
                     <td>
                         <div class="rh-col-id">ORD-<br>9780</div>
                     </td>
@@ -101,7 +101,7 @@
                 </tr>
 
                 <!-- Row 3 -->
-                <tr class="rh-row-clickable">
+                <tr class="rh-row-clickable" onclick="openTransactionModal(this)">
                     <td>
                         <div class="rh-col-id" style="color: #F44336; opacity: 0.8;">ORD-<br>9711</div>
                     </td>
@@ -144,4 +144,108 @@
             <span class="rh-pag-btn">Next &gt;</span>
         </div>
     </div>
+
+    <!-- Transaction Modal -->
+    <div class="rh-modal-overlay" id="transactionModal">
+        <div class="rh-modal-content">
+            <i class="ph ph-x rh-modal-close" onclick="closeTransactionModal()"></i>
+            
+            <div class="rh-modal-header">
+                <div>
+                    <h2 class="rh-modal-title">Royalty Detail</h2>
+                    <div class="rh-modal-subtitle">TRANSACTION BREAKDOWN</div>
+                </div>
+                <div class="rh-receipt-meta">
+                    <div class="rh-receipt-meta-id" id="modal-order-id">ORD-0000</div>
+                    <div class="rh-receipt-meta-date" id="modal-curr-date">TODAY</div>
+                </div>
+            </div>
+
+            <div class="rh-payment-status">
+                <div class="rh-payment-label">STATUS</div>
+                <div class="rh-payment-val" id="modal-status">...</div>
+            </div>
+
+            <div class="rh-modal-columns">
+                <div class="rh-modal-col">
+                    <div class="rh-modal-col-title">COSTUME ENTITY</div>
+                    <div class="rh-modal-col-val" id="modal-costume-name">...</div>
+                </div>
+                <div class="rh-modal-col">
+                    <div class="rh-modal-col-title">RENTAL PERIOD</div>
+                    <div class="rh-modal-col-val" id="modal-rental-period">...</div>
+                </div>
+            </div>
+
+            <div class="rh-modal-items">
+                <div class="rh-modal-item-ref">FINANCIAL BREAKDOWN</div>
+                <div class="rh-modal-row">
+                    <div>
+                        <div class="rh-modal-row-name">Base Rental Fee</div>
+                    </div>
+                    <div class="rh-modal-row-price" id="modal-total-fee">Rp 0</div>
+                </div>
+                <div class="rh-modal-row">
+                    <div>
+                        <div class="rh-modal-row-name" style="color: var(--accent-gold);">Platform Fee (30%)</div>
+                    </div>
+                    <div class="rh-modal-row-price" style="color: var(--accent-gold);" id="modal-platform-fee">- Rp 0</div>
+                </div>
+            </div>
+
+            <div class="rh-modal-total-row">
+                <div class="rh-modal-total-label">My Royalty (70%)</div>
+                <div class="rh-modal-total-val" style="color: var(--accent-gold);" id="modal-royalty">Rp 0</div>
+            </div>
+
+            <div class="rh-modal-actions">
+                <div class="rh-mbtn rh-mbtn-solid" onclick="closeTransactionModal()">CLOSE</div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    function openTransactionModal(row) {
+        // Extract data from the clicked row
+        var orderId = row.querySelector('.rh-col-id').innerText.replace('\n', '');
+        var costumeName = row.querySelector('.rh-col-costume-name').innerText;
+        var rentalPeriod = row.querySelector('.rh-col-date').innerText.replace('\n', ' ');
+        var amounts = row.querySelectorAll('.rh-col-amount');
+        var totalFeeTxt = amounts[0].innerText;
+        var royaltyTxt = amounts[1].innerText;
+        var statusTxt = row.querySelector('.rh-status-pill').innerText.trim();
+
+        // Calculate generic platform fee for visual
+        var totalFeeNum = parseInt(totalFeeTxt.replace(/[^0-9]/g, ''));
+        var platformFeeNum = totalFeeNum * 0.3;
+        var platformFeeTxt = 'Rp ' + platformFeeNum.toLocaleString('id-ID');
+        
+        // Setup current date
+        var todayOpts = { year: 'numeric', month: 'long', day: 'numeric' };
+        var today = new Date().toLocaleDateString('en-GB', todayOpts).toUpperCase();
+
+        document.getElementById('modal-order-id').innerText = orderId;
+        document.getElementById('modal-curr-date').innerText = today;
+        document.getElementById('modal-status').innerText = statusTxt.toUpperCase();
+        document.getElementById('modal-costume-name').innerText = costumeName;
+        document.getElementById('modal-rental-period').innerText = rentalPeriod;
+        document.getElementById('modal-total-fee').innerText = totalFeeTxt;
+        document.getElementById('modal-platform-fee').innerText = '- ' + platformFeeTxt;
+        document.getElementById('modal-royalty').innerText = royaltyTxt;
+
+        document.getElementById('transactionModal').style.display = 'flex';
+    }
+
+    function closeTransactionModal() {
+        document.getElementById('transactionModal').style.display = 'none';
+    }
+
+    // Close when clicking outside content
+    window.onclick = function(event) {
+        var transactionModal = document.getElementById('transactionModal');
+        if (event.target == transactionModal) {
+            closeTransactionModal();
+        }
+    }
+</script>

@@ -28,17 +28,21 @@
         <div class="ds-card ds-widget-chart">
             <div class="ds-widget-chart-top">
                 <div class="ds-widget-chart-title">
-                    <h3>Year-over-Year Rental<br>Comparison</h3>
-                    <p>COMPARATIVE VOLUME ANALYSIS: 2023 VS 2024</p>
+                    <h3>Rental Performance<br>& Forecast</h3>
+                    <p>YOY COMPARISON & 2024 PROJECTION</p>
                 </div>
                 <div class="ds-chart-legend">
                     <div class="ds-legend-item">
-                        <div class="ds-legend-color this-year"></div>
+                        <div class="ds-legend-color last-year" style="background: #8C92A6;"></div>
+                        LAST<br>YEAR
+                    </div>
+                    <div class="ds-legend-item">
+                        <div class="ds-legend-color this-year" style="background: #E5C158;"></div>
                         THIS<br>YEAR
                     </div>
                     <div class="ds-legend-item">
-                        <div class="ds-legend-color last-year"></div>
-                        LAST<br>YEAR
+                        <div class="ds-legend-color forecast" style="background: transparent; border: 2px dashed #4CAF50; width: 12px; height: 12px; border-radius: 3px; display: inline-block;"></div>
+                        FORECAST
                     </div>
                 </div>
             </div>
@@ -46,15 +50,24 @@
             <div id="rentalPerformanceChart" style="min-height: 250px; margin-top: 10px;"></div>
         </div>
 
-        <!-- Monthly Income -->
+        <!-- Monthly Stats -->
         <div class="ds-card ds-widget-income">
             <p style="font-size: 10px; color: var(--accent-gold); letter-spacing: 1px; margin: 0; text-transform: uppercase;">
                 MONTHLY INCOME PERFORMANCE
             </p>
             <div class="ds-income-value">Rp 142,5 Jt</div>
-            <div class="ds-income-change">
+            <div class="ds-income-change" style="margin-bottom: 20px;">
                 <i class="ph-bold ph-trend-up"></i>
                 +18.2% vs last month
+            </div>
+            
+            <p style="font-size: 10px; color: var(--accent-gold); letter-spacing: 1px; margin: 0; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                TOTAL RENTED ITEMS
+            </p>
+            <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 600; color: #fff; margin: 8px 0;">345 <span style="font-size: 12px; font-weight: normal; color: var(--text-secondary); font-family: var(--font-primary);">Pieces</span></div>
+            <div class="ds-income-change" style="color: #4CAF50;">
+                <i class="ph-bold ph-trend-up"></i>
+                +24 items vs last month
             </div>
         </div>
 
@@ -116,18 +129,18 @@
         </div>
         
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; padding: 24px;">
-            <!-- Projected Revenue Chart -->
-            <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+            <!-- Projected Revenue Stats -->
+            <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: center;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                     <div>
-                        <div style="font-size: 10px; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 4px;">EST. REVENUE TRAJECTORY</div>
-                        <div style="font-size: 20px; font-weight: 500; font-family: var(--font-heading); color: #fff;">Rp 98.400.000 <span style="font-size: 11px; color: #4CAF50; font-weight: normal; font-family: 'Inter', sans-serif;"><i class="ph ph-trend-up"></i> +16.4%</span></div>
+                        <div style="font-size: 10px; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 4px;">EST. REVENUE TRAJECTORY (END OF YEAR)</div>
+                        <div style="font-size: 24px; font-weight: 500; font-family: var(--font-heading); color: #fff; margin-top: 12px;">Rp 98.400.000 <span style="font-size: 12px; color: #4CAF50; font-weight: normal; font-family: 'Inter', sans-serif;"><i class="ph ph-trend-up"></i> +16.4%</span></div>
                     </div>
                     <div style="padding: 4px 8px; border-radius: 4px; background: rgba(76, 175, 80, 0.1); color: #4CAF50; font-size: 9px; font-weight: bold; letter-spacing: 1px;">
                         HIGH CONFIDENCE
                     </div>
                 </div>
-                <div id="holtWintersChart" style="min-height: 180px; margin-top: 10px;"></div>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 16px; line-height: 1.6;">Model preskriptif menunjukkan trajektori positif untuk Q3 & Q4 berdasarkan data historis. Grafik prediksi Holt-Winters terintegrasi pada chart performa utama di atas.</p>
             </div>
 
             <!-- Demand Shift -->
@@ -161,11 +174,14 @@
     document.addEventListener("DOMContentLoaded", function() {
         var options = {
             series: [{
-                name: 'This Year (2024)',
-                data: [45, 52, 38, 45, 60, 58, 65, 80, 75, 95, 110, 120]
-            }, {
                 name: 'Last Year (2023)',
                 data: [35, 41, 36, 40, 50, 48, 55, 65, 58, 70, 85, 90]
+            }, {
+                name: 'This Year (2024)',
+                data: [45, 52, 38, 45, null, null, null, null, null, null, null, null]
+            }, {
+                name: 'Forecast (Predicted)',
+                data: [42, 55, 36, 48, 60, 58, 65, 80, 75, 95, 110, 120]
             }],
             chart: {
                 height: 260,
@@ -174,22 +190,22 @@
                 fontFamily: 'Inter, sans-serif',
                 background: 'transparent'
             },
-            colors: ['#E5C158', '#8C92A6'],
+            colors: ['#8C92A6', '#E5C158', '#4CAF50'],
             dataLabels: { enabled: false },
             stroke: {
                 curve: 'smooth',
-                width: [3, 2],
-                dashArray: [0, 8]
+                width: [2, 3, 3],
+                dashArray: [0, 0, 8]
             },
             fill: {
-                type: ['gradient', 'solid'],
+                type: ['solid', 'gradient', 'gradient'],
                 gradient: {
                     shadeIntensity: 1,
                     opacityFrom: 0.4,
                     opacityTo: 0.05,
                     stops: [0, 90, 100]
                 },
-                opacity: [0.8, 0.1]
+                opacity: [0.1, 0.8, 0.4]
             },
             xaxis: {
                 categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -198,7 +214,10 @@
                 axisTicks: { show: false }
             },
             yaxis: {
-                labels: { show: false }
+                labels: { 
+                    show: true,
+                    style: { colors: '#8C92A6', fontSize: '10px' }
+                }
             },
             grid: {
                 borderColor: 'rgba(255, 255, 255, 0.05)',
@@ -217,72 +236,6 @@
 
         var chart = new ApexCharts(document.querySelector("#rentalPerformanceChart"), options);
         chart.render();
-
-        // Holt-Winters Forecast Chart
-        var hwOptions = {
-            series: [{
-                name: 'Historical (Actual)',
-                data: [65, 72, 60, 85, 95] // Past 5 months
-            }, {
-                name: 'Forecast (Predicted)',
-                data: [null, null, null, null, 95, 110, 115] // Continues from month 5 to next 2 months
-            }],
-            chart: {
-                height: 190,
-                type: 'area',
-                toolbar: { show: false },
-                fontFamily: 'Inter, sans-serif',
-                background: 'transparent'
-            },
-            colors: ['#8C92A6', '#4CAF50'],
-            dataLabels: { enabled: false },
-            stroke: {
-                curve: 'smooth',
-                width: [2, 3],
-                dashArray: [0, 6] // Dashed line for prediction
-            },
-            fill: {
-                type: ['solid', 'gradient'],
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.3,
-                    opacityTo: 0.05,
-                    stops: [0, 90, 100]
-                },
-                opacity: [0.1, 0.4]
-            },
-            xaxis: {
-                categories: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct (Now)', 'Nov', 'Dec'],
-                labels: { style: { colors: '#8C92A6', fontSize: '9px', cssClass: 'apexcharts-xaxis-label' } },
-                axisBorder: { show: false },
-                axisTicks: { show: false }
-            },
-            yaxis: {
-                show: false,
-                min: 40
-            },
-            grid: {
-                borderColor: 'rgba(255, 255, 255, 0.05)',
-                strokeDashArray: 4,
-                yaxis: { lines: { show: true } },
-                xaxis: { lines: { show: false } },
-                padding: { top: 0, right: 0, bottom: 0, left: 10 }
-            },
-            legend: { 
-                position: 'top', 
-                horizontalAlign: 'right', 
-                markers: { radius: 12 },
-                fontSize: '10px',
-                labels: { colors: '#8C92A6' }
-            },
-            theme: { mode: 'dark' },
-            tooltip: {
-                theme: 'dark'
-            }
-        };
-
-        var hwChart = new ApexCharts(document.querySelector("#holtWintersChart"), hwOptions);
-        hwChart.render();
 
         // Custom Dropdown Logic
         const dropdown = document.getElementById("periodDropdown");

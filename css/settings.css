@@ -1,0 +1,221 @@
+/* Settings CSS */
+
+.settings-container {
+    display: flex;
+    gap: 48px;
+    height: 100%;
+}
+
+.settings-sidebar {
+    width: 250px;
+    border-right: 1px solid var(--border-subtle);
+    padding-right: 24px;
+}
+
+.settings-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.settings-nav-item {
+    padding: 16px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+}
+
+.settings-nav-item i {
+    font-size: 18px;
+}
+
+.settings-nav-item:hover {
+    background: rgba(255,255,255,0.02);
+    color: var(--text-primary);
+}
+
+.settings-nav-item.active {
+    background: rgba(229, 193, 88, 0.1);
+    color: var(--accent-gold);
+    border-left: 3px solid var(--accent-gold);
+}
+
+.settings-content {
+    flex: 1;
+    padding-bottom: 64px;
+}
+
+.settings-pane {
+    display: none;
+    animation: fadeUpIn 0.4s ease forwards;
+}
+
+.settings-pane.active {
+    display: block;
+}
+
+.settings-header {
+    margin-bottom: 40px;
+}
+
+.settings-header h2 {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    margin: 0 0 8px 0;
+}
+
+.settings-header p {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin: 0;
+}
+
+/* Card layout for sections */
+.settings-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+}
+
+.settings-card-title {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Forms (reused concepts) */
+.settings-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 24px;
+}
+
+.settings-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-field label {
+    font-size: 9px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.settings-input {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 14px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.settings-input:focus {
+    border-color: var(--accent-gold);
+}
+
+.settings-btn-primary {
+    background: var(--accent-gold);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 14px 24px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.settings-btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+/* Tables for Users/Categories */
+.settings-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.settings-table th {
+    text-align: left;
+    font-size: 9px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.settings-table td {
+    padding: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.settings-table tr:hover td {
+    background: rgba(255,255,255,0.02);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--accent-gold);
+    margin-right: 12px;
+}
+
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.role-admin { background: rgba(229, 193, 88, 0.1); color: var(--accent-gold); border: 1px solid rgba(229, 193, 88, 0.3); }
+.role-designer { background: rgba(140, 146, 166, 0.1); color: var(--text-secondary); border: 1px solid rgba(140, 146, 166, 0.3); }
+
+.action-icon {
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.2s;
+    margin-left: 8px;
+}
+
+.action-icon:hover {
+    color: var(--text-primary);
+}
+.action-icon.danger:hover {
+    color: #F44336;
+}
