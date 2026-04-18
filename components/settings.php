@@ -1,3 +1,21 @@
+<?php
+require_once 'koneksi.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_user'])) {
+    $username = mysqli_real_escape_string($koneksi, $_POST['username']);
+    $full_name = mysqli_real_escape_string($koneksi, $_POST['full_name']);
+    $email = mysqli_real_escape_string($koneksi, $_POST['email']);
+    $role = mysqli_real_escape_string($koneksi, $_POST['role']);
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    $sql = "INSERT INTO users (username, full_name, email, password, role) VALUES ('$username', '$full_name', '$email', '$password', '$role')";
+    if (mysqli_query($koneksi, $sql)) {
+        echo "<script>alert('User berhasil ditambahkan!'); window.location.href='index.php?page=settings';</script>";
+    } else {
+        echo "<script>alert('Gagal menambahkan user: " . mysqli_error($koneksi) . "');</script>";
+    }
+}
+?>
 <div class="ds-content">
     <div class="settings-container">
         <!-- Sidebar Tabs -->
@@ -71,30 +89,36 @@
                         <span>Grant New Access</span>
                         <i class="ph ph-x action-icon" onclick="document.getElementById('newUserForm').style.display = 'none';"></i>
                     </div>
-                    <div class="settings-form-row">
-                        <div class="settings-field">
-                            <label>Full Name</label>
-                            <input type="text" class="settings-input" placeholder="e.g. Aria Vanguard" />
+                    <form method="POST" action="">
+                        <div class="settings-form-row">
+                            <div class="settings-field">
+                                <label>Username</label>
+                                <input type="text" name="username" class="settings-input" placeholder="e.g. aria_v" required />
+                            </div>
+                            <div class="settings-field">
+                                <label>Full Name</label>
+                                <input type="text" name="full_name" class="settings-input" placeholder="e.g. Aria Vanguard" required />
+                            </div>
+                            <div class="settings-field">
+                                <label>Email Address</label>
+                                <input type="email" name="email" class="settings-input" placeholder="aria@bantar.com" required />
+                            </div> 
                         </div>
-                        <div class="settings-field">
-                            <label>Email Address</label>
-                            <input type="email" class="settings-input" placeholder="aria@bantar.com" />
+                        <div class="settings-form-row">
+                            <div class="settings-field">
+                                <label>System Role</label>
+                                <select name="role" class="settings-input" style="appearance: none; cursor: pointer;" required>
+                                    <option value="Administrator">Administrator</option>
+                                    <option value="Designer">Designer</option>
+                                </select>
+                            </div>
+                            <div class="settings-field">
+                                <label>Initial Password</label>
+                                <input type="password" name="password" class="settings-input" placeholder="••••••••" required />
+                            </div>
                         </div>
-                    </div>
-                    <div class="settings-form-row">
-                        <div class="settings-field">
-                            <label>System Role</label>
-                            <select class="settings-input" style="appearance: none; cursor: pointer;">
-                                <option>Administrator</option>
-                                <option>Designer</option>
-                            </select>
-                        </div>
-                        <div class="settings-field">
-                            <label>Initial Password</label>
-                            <input type="password" class="settings-input" placeholder="••••••••" />
-                        </div>
-                    </div>
-                    <button class="settings-btn-primary">CREATE ACCOUNT</button>
+                        <button type="submit" name="create_user" class="settings-btn-primary">CREATE ACCOUNT</button>
+                    </form>
                 </div>
 
                 <div class="settings-card">
@@ -104,55 +128,56 @@
                                 <th>Identity</th>
                                 <th>Email</th>
                                 <th>Privilege Role</th>
-                                <th>Last Active</th>
                                 <th style="text-align: right;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center;">
-                                        <div class="user-avatar">B</div>
-                                        <strong>Bara Exclusives</strong>
-                                    </div>
-                                </td>
-                                <td style="color: var(--text-secondary);">bara@bantar.id</td>
-                                <td><span class="role-badge role-admin">ADMINISTRATOR</span></td>
-                                <td style="color: var(--text-secondary);">Online now</td>
-                                <td style="text-align: right;">
-                                    <i class="ph ph-pencil-simple action-icon"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center;">
-                                        <div class="user-avatar" style="color: #fff;">EV</div>
-                                        <strong>Elena Vanhoutte</strong>
-                                    </div>
-                                </td>
-                                <td style="color: var(--text-secondary);">elena@studio.com</td>
-                                <td><span class="role-badge role-designer">DESIGNER</span></td>
-                                <td style="color: var(--text-secondary);">2 days ago</td>
-                                <td style="text-align: right;">
-                                    <i class="ph ph-pencil-simple action-icon"></i>
-                                    <i class="ph ph-trash action-icon danger"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center;">
-                                        <div class="user-avatar" style="color: #fff;">NV</div>
-                                        <strong>Nova Veil</strong>
-                                    </div>
-                                </td>
-                                <td style="color: var(--text-secondary);">hello@novaveil.co</td>
-                                <td><span class="role-badge role-designer">DESIGNER</span></td>
-                                <td style="color: var(--text-secondary);">1 week ago</td>
-                                <td style="text-align: right;">
-                                    <i class="ph ph-pencil-simple action-icon"></i>
-                                    <i class="ph ph-trash action-icon danger"></i>
-                                </td>
-                            </tr>
+                            <?php
+                            $userQuery = "SELECT id, username, full_name, email, role FROM users ORDER BY id DESC";
+                            $userResult = mysqli_query($koneksi, $userQuery);
+                            if ($userResult && mysqli_num_rows($userResult) > 0) {
+                                while ($u = mysqli_fetch_assoc($userResult)) {
+                                    $fullName = htmlspecialchars($u['full_name']);
+                                    $email = htmlspecialchars($u['email']);
+                                    $roleStr = strtoupper($u['role']);
+                                    
+                                    // Generate Inisial Avatar (maks 2 huruf)
+                                    $words = explode(" ", $fullName);
+                                    $initials = "";
+                                    foreach ($words as $w) {
+                                        $w = trim($w);
+                                        if (!empty($w)) {
+                                            $initials .= strtoupper($w[0]);
+                                        }
+                                        if (strlen($initials) >= 2) break;
+                                    }
+                                    if (empty($initials)) $initials = "?";
+                                    
+                                    $roleClass = ($roleStr === 'ADMINISTRATOR') ? 'role-admin' : 'role-designer';
+                                    $avatarStyle = ($roleStr === 'ADMINISTRATOR') ? '' : 'style="color: #fff;"';
+                                    
+                                    echo '<tr>';
+                                    echo '    <td>';
+                                    echo '        <div style="display: flex; align-items: center;">';
+                                    echo '            <div class="user-avatar" '.$avatarStyle.'>'.$initials.'</div>';
+                                    echo '            <strong>'.$fullName.'</strong>';
+                                    echo '        </div>';
+                                    echo '    </td>';
+                                    echo '    <td style="color: var(--text-secondary);">'.$email.'</td>';
+                                    echo '    <td><span class="role-badge '.$roleClass.'">'.$roleStr.'</span></td>';
+                                    echo '    <td style="text-align: right;">';
+                                    echo '        <i class="ph ph-pencil-simple action-icon"></i>';
+                                    // Menampilkan tombol delete jika bukan Administrator utama
+                                    if ($roleStr !== 'ADMINISTRATOR') {
+                                        echo '        <i class="ph ph-trash action-icon danger"></i>';
+                                    }
+                                    echo '    </td>';
+                                    echo '</tr>';
+                                }
+                            } else {
+                                echo '<tr><td colspan="4" style="text-align:center;">No users registered yet.</td></tr>';
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>

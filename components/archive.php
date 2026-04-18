@@ -1,10 +1,16 @@
+<?php
+// Fetch all garments from database
+require_once __DIR__ . '/../koneksi.php';
+$result = mysqli_query($koneksi, "SELECT * FROM stok_kostum ORDER BY id DESC");
+?>
+
 <div class="ds-content">
     <div class="ds-top-bar" style="margin-bottom: 24px;">
         <div class="ds-title">
             <p style="font-size: 10px; color: var(--text-secondary); letter-spacing: 1px; margin-bottom: 8px;">CURATED COLLECTION</p>
             <h1 style="font-size: 48px; margin-bottom: 16px;">Archive Catalog</h1>
             <p style="max-width: 600px; color: var(--text-secondary); font-size: 13px; line-height: 1.6; letter-spacing: normal; text-transform: none;">
-                Exploring the boundaries of theatrical elegance. Our current inventory features 1,402 bespoke pieces from the Victorian era through modern avant-garde.
+                Exploring the boundaries of theatrical elegance. Our current inventory features bespoke pieces from the Victorian era through modern avant-garde.
             </p>
         </div>
         <div class="ds-actions" style="display: flex; gap: 16px; align-self: center;">
@@ -22,126 +28,90 @@
 
     <!-- Grid -->
     <div class="ds-catalog-grid">
-        
-        <!-- Item 1 -->
-        <div class="ds-catalog-card" data-cat="designer">
-            <img src="assets/catalog_1.png" alt="Midnight Structure">
-            <div class="ds-avail-badge ds-avail-green">AVAILABLE</div>
-            <div class="ds-catalog-overlay">
-                <div class="ds-catalog-top">
-                    <span class="ds-cat-label" style="color: #8CA3C5;">BUSANA DESAINER</span>
-                </div>
-                <div class="ds-cat-hover-actions">
-                    <button class="ds-btn-cat-action" onclick="openQuickView('assets/catalog_1.png', 'Midnight Structure', 'BUSANA DESAINER', 'Rp 2,5 Jt', 'AVAILABLE', 'green', 'Sebuah mahakarya Haute Couture dari Bara Exclusives. Menyatukan tekstur velvet kelam dengan kerangka struktur emas yang tersembunyi. Sangat populer untuk sesi pemotretan bertema Gothic dan Met Gala.', '500.000', 1, 5)"><i class="ph ph-eye"></i> QUICK VIEW</button>
-                    <button class="ds-btn-cat-action primary" onclick="window.location.href='index.php?page=tambah-sewa'"><i class="ph ph-shopping-bag"></i> RENT</button>
-                </div>
-                <div style="width: 100%;">
-                    <div class="ds-catalog-bottom" style="margin-bottom: 12px;">
-                        <div>
-                            <div style="font-size: 10px; color: var(--accent-gold); letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase;">By Bara Exclusives</div>
-                            <h3 class="ds-cat-title">Midnight<br>Structure</h3>
-                        </div>
-                        <div class="ds-cat-price">
-                            <strong>Rp 2,5 Jt</strong><span>/hari</span>
-                        </div>
-                    </div>
-                    <div style="font-size: 11px; color: var(--text-secondary); padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
-                        <span>Stok Tersedia:</span>
-                        <span><strong style="color: #fff;">1</strong> / 5</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Item 2 -->
-        <div class="ds-catalog-card" data-cat="designer">
-            <img src="assets/catalog_2.png" alt="Crimson Sovereign">
-            <div class="ds-avail-badge ds-avail-red">RENTED</div>
+        <?php if ($result && mysqli_num_rows($result) > 0): ?>
+        <?php while ($item = mysqli_fetch_assoc($result)): 
+            // Determine category slug for filter
+            $kategori_raw = strtolower($item['kategori'] ?? '');
+            if (strpos($kategori_raw, 'desainer') !== false || strpos($kategori_raw, 'designer') !== false) {
+                $cat_slug = 'designer';
+                $cat_label = 'BUSANA DESAINER';
+                $cat_color = '#8CA3C5';
+                $designer_color = 'var(--accent-gold)';
+            } else {
+                $cat_slug = 'carnival';
+                $cat_label = 'KOSTUM KARNAVAL';
+                $cat_color = '#C5A39B';
+                $designer_color = '#C5A39B';
+            }
+
+            // Determine availability
+            $jumlah = (int)($item['jumlah'] ?? 0);
+            $is_available = $jumlah > 0;
+            $badge_class = $is_available ? 'ds-avail-green' : 'ds-avail-red';
+            $badge_text  = $is_available ? 'AVAILABLE' : 'RENTED';
+            $status_color = $is_available ? 'green' : 'red';
+
+            // Image path
+            $gambar = !empty($item['gambar']) ? htmlspecialchars($item['gambar']) : 'assets/catalog_1.png';
+
+            // Prices
+            $rental_price = (float)($item['rental_price'] ?? 0);
+            $rental_model_price = (float)($item['rental_model_price'] ?? 0);
+            $price_fmt = 'Rp ' . number_format($rental_price, 0, ',', '.');
+            $fine_fmt  = number_format($rental_model_price, 0, ',', '.');
+
+            // Safe JS strings
+            $js_img   = addslashes($gambar);
+            $js_nama  = addslashes($item['nama_kostum']);
+            $js_cat   = addslashes($cat_label);
+            $js_price = addslashes($price_fmt);
+            $js_status = addslashes($badge_text);
+            $js_color  = addslashes($status_color);
+            $js_desc   = addslashes($item['deskripsi'] ?? '');
+            $js_fine   = addslashes($fine_fmt);
+
+            // Format nama kostum for display (split on space for line break effect)
+            $nama_parts = explode(' ', $item['nama_kostum'], 2);
+            $nama_line1 = htmlspecialchars($nama_parts[0]);
+            $nama_line2 = isset($nama_parts[1]) ? htmlspecialchars($nama_parts[1]) : '';
+
+            $id = (int)$item['id'];
+        ?>
+        <div class="ds-catalog-card" data-cat="<?= $cat_slug ?>" data-id="<?= $id ?>">
+            <img src="<?= $gambar ?>" alt="<?= htmlspecialchars($item['nama_kostum']) ?>">
+            <div class="ds-avail-badge <?= $badge_class ?>"><?= $badge_text ?></div>
             <div class="ds-catalog-overlay">
                 <div class="ds-catalog-top">
-                    <span class="ds-cat-label" style="color: #8CA3C5;">BUSANA DESAINER</span>
+                    <span class="ds-cat-label" style="color: <?= $cat_color ?>;"><?= $cat_label ?></span>
                 </div>
                 <div class="ds-cat-hover-actions">
-                    <button class="ds-btn-cat-action" onclick="openQuickView('assets/catalog_2.png', 'Crimson Sovereign', 'BUSANA DESAINER', 'Rp 4,2 Jt', 'RENTED', 'red', 'Busana megah berwarna crimson dengan teknik draping khusus dari Alexander McQueen. Bagian bahu diperkuat dengan chainmail ringan untuk memberikan kesan royal dan superior.', '1.200.000', 0, 2)"><i class="ph ph-eye"></i> QUICK VIEW</button>
+                    <button class="ds-btn-cat-action" onclick="openQuickView('<?= $js_img ?>', '<?= $js_nama ?>', '<?= $js_cat ?>', '<?= $js_price ?>', '<?= $js_status ?>', '<?= $js_color ?>', '<?= $js_desc ?>', '<?= $js_fine ?>', <?= $jumlah ?>, <?= $jumlah ?>, <?= $id ?>)"><i class="ph ph-eye"></i> QUICK VIEW</button>
+                    <?php if ($is_available): ?>
+                    <button class="ds-btn-cat-action primary" onclick="window.location.href='index.php?page=tambah-sewa'"><i class="ph ph-shopping-bag"></i> RENT</button>
+                    <?php else: ?>
                     <button class="ds-btn-cat-action primary" style="background:#555; pointer-events:none;"><i class="ph ph-lock"></i> UNAVAILABLE</button>
+                    <?php endif; ?>
                 </div>
                 <div style="width: 100%;">
                     <div class="ds-catalog-bottom" style="margin-bottom: 12px;">
                         <div>
-                            <div style="font-size: 10px; color: var(--accent-gold); letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase;">By Alexander McQueen</div>
-                            <h3 class="ds-cat-title">Crimson<br>Sovereign</h3>
+                            <div style="font-size: 10px; color: <?= $designer_color ?>; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase;">By <?= htmlspecialchars($item['nama_designer']) ?></div>
+                            <h3 class="ds-cat-title"><?= $nama_line1 ?><?= $nama_line2 ? '<br>' . $nama_line2 : '' ?></h3>
                         </div>
                         <div class="ds-cat-price">
-                            <strong>Rp 4,2 Jt</strong><span>/hari</span>
+                            <strong><?= $price_fmt ?></strong><span>/hari</span>
                         </div>
                     </div>
                     <div style="font-size: 11px; color: var(--text-secondary); padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
                         <span>Stok Tersedia:</span>
-                        <span><strong style="color: #F44336;">0</strong> / 2</span>
+                        <span><strong style="color: <?= $is_available ? '#fff' : '#F44336' ?>;"><?= $jumlah ?></strong> / <?= $jumlah ?></span>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Item 3 -->
-        <div class="ds-catalog-card" data-cat="designer">
-            <img src="assets/catalog_3.png" alt="Alabaster Fold">
-            <div class="ds-avail-badge ds-avail-green">AVAILABLE</div>
-            <div class="ds-catalog-overlay">
-                <div class="ds-catalog-top">
-                    <span class="ds-cat-label" style="color: #8CA3C5;">BUSANA DESAINER</span>
-                </div>
-                <div class="ds-cat-hover-actions">
-                    <button class="ds-btn-cat-action" onclick="openQuickView('assets/catalog_3.png', 'Alabaster Fold', 'BUSANA DESAINER', 'Rp 1,8 Jt', 'AVAILABLE', 'green', 'Potongan artistik bernuansa futuristik dengan tekstur berlipat khas 3D printing.', '750.000', 3, 3)"><i class="ph ph-eye"></i> QUICK VIEW</button>
-                    <button class="ds-btn-cat-action primary" onclick="window.location.href='index.php?page=tambah-sewa'"><i class="ph ph-shopping-bag"></i> RENT</button>
-                </div>
-                <div style="width: 100%;">
-                    <div class="ds-catalog-bottom" style="margin-bottom: 12px;">
-                        <div>
-                            <div style="font-size: 10px; color: var(--accent-gold); letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase;">By Iris Van Herpen</div>
-                            <h3 class="ds-cat-title">Alabaster<br>Fold</h3>
-                        </div>
-                        <div class="ds-cat-price">
-                            <strong>Rp 1,8 Jt</strong><span>/hari</span>
-                        </div>
-                    </div>
-                    <div style="font-size: 11px; color: var(--text-secondary); padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
-                        <span>Stok Tersedia:</span>
-                        <span><strong style="color: #fff;">3</strong> / 3</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Item 4 -->
-        <div class="ds-catalog-card" data-cat="carnival">
-            <img src="assets/catalog_4.png" alt="Garuda Emas">
-            <div class="ds-avail-badge ds-avail-green">AVAILABLE</div>
-            <div class="ds-catalog-overlay">
-                <div class="ds-catalog-top">
-                    <span class="ds-cat-label" style="color: #C5A39B;">KOSTUM KARNAVAL</span>
-                </div>
-                <div class="ds-cat-hover-actions">
-                    <button class="ds-btn-cat-action" onclick="openQuickView('assets/catalog_4.png', 'Garuda Emas', 'KOSTUM KARNAVAL', 'Rp 850 Rb', 'AVAILABLE', 'green', 'Sayap replika besar dengan ornamen batik emas untuk parade dan hari jadi.', '300.000', 2, 4)"><i class="ph ph-eye"></i> QUICK VIEW</button>
-                    <button class="ds-btn-cat-action primary" onclick="window.location.href='index.php?page=tambah-sewa'"><i class="ph ph-shopping-bag"></i> RENT</button>
-                </div>
-                <div style="width: 100%;">
-                    <div class="ds-catalog-bottom" style="margin-bottom: 12px;">
-                        <div>
-                            <div style="font-size: 10px; color: #C5A39B; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase;">Komunitas BANTAR</div>
-                            <h3 class="ds-cat-title">Garuda<br>Emas</h3>
-                        </div>
-                        <div class="ds-cat-price">
-                            <strong>Rp 850 Rb</strong><span>/hari</span>
-                        </div>
-                    </div>
-                    <div style="font-size: 11px; color: var(--text-secondary); padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
-                        <span>Stok Tersedia:</span>
-                        <span><strong style="color: #fff;">2</strong> / 4</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php endwhile; ?>
+        <?php endif; ?>
 
         <!-- Item Placeholder / Add -->
         <div class="ds-catalog-placeholder ds-card" onclick="window.location.href='index.php?page=tambah-busana'">
@@ -150,36 +120,6 @@
             </div>
             <h3>Expanding the<br>Bantar</h3>
             <p>NEW ACQUISITIONS<br>ARRIVING WEEKLY</p>
-        </div>
-
-        <!-- Item 5 -->
-        <div class="ds-catalog-card" data-cat="designer">
-            <img src="assets/catalog_5.png" alt="Canary Volume">
-            <div class="ds-avail-badge ds-avail-green">AVAILABLE</div>
-            <div class="ds-catalog-overlay">
-                <div class="ds-catalog-top">
-                    <span class="ds-cat-label" style="color: #8CA3C5;">BUSANA DESAINER</span>
-                </div>
-                <div class="ds-cat-hover-actions">
-                    <button class="ds-btn-cat-action" onclick="openQuickView('assets/catalog_5.png', 'Canary Volume', 'BUSANA DESAINER', 'Rp 3,1 Jt', 'AVAILABLE', 'green', 'Koleksi Canary Volume memiliki arsitektur lengan balon yang asimetris. Dominasi warna emas yang mencolok sempurna untuk sesi foto editorial bertema High-Fashion.', '500.000', 1, 2)"><i class="ph ph-eye"></i> QUICK VIEW</button>
-                    <button class="ds-btn-cat-action primary" onclick="window.location.href='index.php?page=tambah-sewa'"><i class="ph ph-shopping-bag"></i> RENT</button>
-                </div>
-                <div style="width: 100%;">
-                    <div class="ds-catalog-bottom" style="margin-bottom: 12px;">
-                        <div>
-                            <div style="font-size: 10px; color: var(--accent-gold); letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase;">By Bara Exclusives</div>
-                            <h3 class="ds-cat-title">Canary<br>Volume</h3>
-                        </div>
-                        <div class="ds-cat-price">
-                            <strong>Rp 3,1 Jt</strong><span>/hari</span>
-                        </div>
-                    </div>
-                    <div style="font-size: 11px; color: var(--text-secondary); padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
-                        <span>Stok Tersedia:</span>
-                        <span><strong style="color: #fff;">1</strong> / 2</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
     </div>
@@ -199,7 +139,7 @@
                 <div style="margin-top: -10px;">
                     <span id="qvCat" class="ds-cat-label" style="color: #8CA3C5;">BUSANA DESAINER</span>
                     <h2 id="qvTitle" style="font-family: var(--font-heading); font-size: 32px; margin: 8px 0;">Midnight Structure</h2>
-                    <p id="qvCode" style="font-size: 11px; color: var(--text-secondary); letter-spacing: 1px;">CODE: CTLG-<span id="qvCodeVal">MD-8812</span></p>
+                    <p id="qvCode" style="font-size: 11px; color: var(--text-secondary); letter-spacing: 1px;">CODE: CTLG-<span id="qvCodeVal">–</span></p>
                 </div>
                 
                 <p id="qvDesc" style="color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin: 24px 0; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 24px;">
@@ -220,7 +160,7 @@
                 
                 <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px;">
                     <div style="display: flex; gap: 12px;">
-                        <button class="ds-btn-outline" style="flex: 1; border-color: rgba(255,255,255,0.2);" onclick="window.location.href='index.php?page=edit-busana'"><i class="ph ph-pencil-simple"></i> EDIT ITEM</button>
+                        <button class="ds-btn-outline" style="flex: 1; border-color: rgba(255,255,255,0.2);" id="qvEditBtn" onclick="window.location.href='index.php?page=edit-busana'"><i class="ph ph-pencil-simple"></i> EDIT ITEM</button>
                         <button class="ds-btn-outline" style="flex: 1; border-color: #F44336; color: #F44336;" onclick="deleteAdminItem()"><i class="ph ph-trash"></i> DELETE</button>
                     </div>
                     <div style="display: flex; gap: 12px;">
@@ -247,9 +187,10 @@ function filterCat(elem, cat) {
     });
 }
 
-function openQuickView(imgPath, title, cat, price, status, statusColor, desc, fine, stockAvail, stockTotal) {
+function openQuickView(imgPath, title, cat, price, status, statusColor, desc, fine, stockAvail, stockTotal, itemId) {
     // Capture the event to get the card reference for deletion
     window.currentQuickViewCard = event ? event.currentTarget.closest('.ds-catalog-card') : null;
+    window.currentQuickViewId   = itemId || null;
     
     document.getElementById('qvImage').src = imgPath;
     document.getElementById('qvTitle').innerText = title;
@@ -259,9 +200,14 @@ function openQuickView(imgPath, title, cat, price, status, statusColor, desc, fi
     document.getElementById('qvStockAvail').innerText = stockAvail;
     document.getElementById('qvStockTotal').innerText = stockTotal;
     
-    // Generate random code for mockup
-    document.getElementById('qvCodeVal').innerText = Math.floor(1000 + Math.random() * 9000);
+    // Code from item id
+    document.getElementById('qvCodeVal').innerText = itemId ? String(itemId).padStart(4, '0') : '–';
     
+    // Update edit button to carry item id
+    if (itemId) {
+        document.getElementById('qvEditBtn').setAttribute('onclick', "window.location.href='index.php?page=edit-busana&id=" + itemId + "'");
+    }
+
     const badge = document.getElementById('qvBadge');
     badge.innerText = status;
     badge.className = 'ds-avail-badge ds-avail-' + statusColor;
@@ -293,19 +239,45 @@ function closeQuickView() {
     setTimeout(() => {
         modal.style.display = 'none';
         window.currentQuickViewCard = null;
+        window.currentQuickViewId   = null;
     }, 300);
 }
 
 function deleteAdminItem() {
     if(confirm("Apakah Anda yakin ingin menghapus item ini dari arsip katalog? Tindakan ini tidak dapat dibatalkan.")) {
+        const itemId = window.currentQuickViewId;
+        const card   = window.currentQuickViewCard;
         closeQuickView();
-        if(window.currentQuickViewCard) {
-            window.currentQuickViewCard.style.transition = 'all 0.4s ease';
-            window.currentQuickViewCard.style.transform = 'scale(0.9)';
-            window.currentQuickViewCard.style.opacity = '0';
-            setTimeout(() => {
-                window.currentQuickViewCard.remove();
-            }, 400);
+
+        if (itemId) {
+            // Send delete request to server
+            fetch('script/delete_kostum.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'id=' + encodeURIComponent(itemId)
+            }).then(res => res.json()).then(data => {
+                if (data.success && card) {
+                    card.style.transition = 'all 0.4s ease';
+                    card.style.transform  = 'scale(0.9)';
+                    card.style.opacity    = '0';
+                    setTimeout(() => card.remove(), 400);
+                } else {
+                    alert('Gagal menghapus item: ' + (data.message || 'Unknown error'));
+                }
+            }).catch(() => {
+                // Fallback: remove visually if fetch fails
+                if(card) {
+                    card.style.transition = 'all 0.4s ease';
+                    card.style.transform  = 'scale(0.9)';
+                    card.style.opacity    = '0';
+                    setTimeout(() => card.remove(), 400);
+                }
+            });
+        } else if(card) {
+            card.style.transition = 'all 0.4s ease';
+            card.style.transform  = 'scale(0.9)';
+            card.style.opacity    = '0';
+            setTimeout(() => card.remove(), 400);
         }
     }
 }

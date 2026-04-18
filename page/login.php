@@ -2,27 +2,32 @@
 $error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'] ?? '';
+    require_once 'koneksi.php';
+    $username = mysqli_real_escape_string($koneksi, $_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    // Fallback dummy (selalu berhasil untuk testing mockup tanpa DB)
-    if (($username == 'admin' && $password == 'admin') || ($username == 'desainer' && $password == 'desainer')) {
-        $_SESSION['user_id'] = 1;
-        $_SESSION['username'] = $username;
-        $_SESSION['role'] = $username;
-        
-        if ($username === 'desainer') {
-            echo "<script>window.location.href='index.php?page=dashboard-desainer';</script>";
-        } else {
-            echo "<script>window.location.href='index.php?page=dashboard';</script>";
-        }
-        exit();
-    }
+    $sql = "SELECT id, username, password, role FROM users WHERE username = '$username'";
+    $result = mysqli_query($koneksi, $sql);
 
-    // Jika masuk kesini, block DB dipanggil jika mau terhubung database
-    // mysqli_report(MYSQLI_REPORT_OFF); // Matikan error throw
-    // include 'koneksi.php'; // Sementara tidak di-include jika fallback diatas terpenuhi
-    $error = 'Username atau password salah!';
+    if ($result && mysqli_num_rows($result) > 0) {
+        $user = mysqli_fetch_assoc($result);
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = $user['role'];
+            
+            if (strtolower($user['role']) === 'designer') {
+                echo "<script>window.location.href='index.php?page=dashboard-desainer';</script>";
+            } else {
+                echo "<script>window.location.href='index.php?page=dashboard';</script>";
+            }
+            exit();
+        } else {
+            $error = 'Username atau password salah!';
+        }
+    } else {
+        $error = 'Username atau password salah!';
+    }
 }
 ?>
 
@@ -73,27 +78,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
     </div>
 </div>
-
-<style>
-/* Full screen override for container */
-.login-body {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    background-color: #0b0c10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Outfit', sans-serif;
-    z-index: 9999;
-    overflow: hidden;
-}
-
-body.bg-dark {
-    overflow-x: hidden;
-}
-</style>

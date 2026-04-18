@@ -1,3 +1,38 @@
+<?php
+require_once 'koneksi.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_busana'])) {
+    $nama_designer = mysqli_real_escape_string($koneksi, $_POST['nama_designer'] ?? '');
+    $nama_kostum = mysqli_real_escape_string($koneksi, $_POST['nama_kostum'] ?? '');
+    $kategori = mysqli_real_escape_string($koneksi, $_POST['kategori'] ?? '');
+    $deskripsi = mysqli_real_escape_string($koneksi, $_POST['deskripsi'] ?? '');
+    $rental_price = preg_replace("/[^0-9]/", "", $_POST['rental_price'] ?? '0');
+    $rental_model_price = preg_replace("/[^0-9]/", "", $_POST['rental_model_price'] ?? '0');
+    $jumlah = (int)($_POST['jumlah'] ?? 0);
+
+    $gambar_path = "";
+    if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
+        $upload_dir = 'assets/uploads/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        $file_name = time() . '-' . basename($_FILES['gambar']['name']);
+        $target_file = $upload_dir . $file_name;
+        if (move_uploaded_file($_FILES['gambar']['tmp_name'], $target_file)) {
+            $gambar_path = $target_file;
+        }
+    }
+
+    $sql = "INSERT INTO stok_kostum (nama_designer, nama_kostum, kategori, deskripsi, rental_price, rental_model_price, jumlah, gambar) 
+            VALUES ('$nama_designer', '$nama_kostum', '$kategori', '$deskripsi', '$rental_price', '$rental_model_price', '$jumlah', '$gambar_path')";
+
+    if (mysqli_query($koneksi, $sql)) {
+        echo "<script>alert('Busana berhasil diarsipkan!'); window.location.href='index.php?page=archive';</script>";
+    } else {
+        echo "<script>alert('Gagal mengarsipkan: " . mysqli_error($koneksi) . "');</script>";
+    }
+}
+?>
 <div class="ds-content">
   <div class="busana-top-container">
      <div class="busana-title-area">
@@ -9,6 +44,8 @@
      </div>
   </div>
 
+  <form id="formTambahBusana" method="POST" enctype="multipart/form-data">
+  <input type="hidden" name="submit_busana" value="1">
   <div class="busana-grid">
      <!-- Left: Form Fields -->
      <div class="busana-form">
@@ -16,7 +53,7 @@
               <div class="busana-field">
                   <label>DESIGNER NAME <span style="color:#F44336">*</span></label>
                   <div class="busana-input-wrapper">
-                      <input type="text" id="designerName" value="Elena Vanhoutte" oninput="validateBusanaInput(this, 'errDesigner')" />
+                      <input type="text" name="nama_designer" id="designerName" value="Elena Vanhoutte" oninput="validateBusanaInput(this, 'errDesigner')" />
                       <i class="ph ph-scribble-loop" style="transform: translateY(-50%) rotate(-15deg);"></i>
                   </div>
                   <div id="errDesigner" class="ds-error-msg" style="display:none; color:#F44336; font-size:9px; margin-top:4px;">Nama desainer wajib diisi!</div>
@@ -24,7 +61,7 @@
               <div class="busana-field">
                   <label>CATEGORY</label>
                   <div class="busana-input-wrapper">
-                      <select name="category">
+                      <select name="kategori" id="kategoriSelect" onchange="toggleModelPrice(this.value)">
                           <option value="busana_desainer">Busana Desainer</option>
                           <option value="kostum_karnaval">Kostum Karnaval</option>
                       </select>
@@ -35,8 +72,25 @@
           
           <div class="busana-field mt-32">
               <label>COSTUME NAME <span style="color:#F44336">*</span></label>
-              <input type="text" id="costumeName" class="busana-big-input" placeholder="e.g. Midnight Onyx Serenade" oninput="validateBusanaInput(this, 'errCostume')" />
+              <input type="text" name="nama_kostum" id="costumeName" class="busana-big-input" placeholder="e.g. Midnight Onyx Serenade" oninput="validateBusanaInput(this, 'errCostume')" />
               <div id="errCostume" class="ds-error-msg" style="display:none; color:#F44336; font-size:9px; margin-top:4px;">Nama kostum wajib diisi!</div>
+          </div>
+
+          <div class="mt-32" id="priceGrid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+              <div class="busana-field">
+                  <label>RENTAL PRICE (RP) <span style="color:#F44336">*</span></label>
+                  <input type="text" name="rental_price" id="rentalPrice" class="busana-big-input" style="font-size: 16px; padding: 12px;" placeholder="e.g. 2500000" />
+              </div>
+              <div class="busana-field" id="wrapModelPrice">
+                  <label>RENTAL MODEL PRICE (RP) <span style="color:#F44336">*</span></label>
+                  <input type="text" name="rental_model_price" id="rentalModelPrice" class="busana-big-input" style="font-size: 16px; padding: 12px;" placeholder="e.g. 3500000" />
+              </div>
+              <div class="busana-field">
+                  <label>STOCK COUNT <span style="color:#F44336">*</span></label>
+                  <div class="busana-input-wrapper">
+                      <input type="number" name="jumlah" id="stockCount" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: #fff; outline: none; font-size: 16px;" placeholder="e.g. 5" />
+                  </div>
+              </div>
           </div>
 
           <div class="busana-field mt-32">
@@ -44,13 +98,13 @@
                   <span>COSTUME PHILOSOPHY <span style="color:#F44336">*</span></span>
                   <span id="charCount" style="font-weight: normal; color: var(--text-secondary); text-transform: none; letter-spacing: 0.5px;">0/1000 characters</span>
               </label>
-              <textarea id="costumeDesc" class="busana-textarea" maxlength="1000" placeholder="The narrative soul of this creation..." oninput="validateBusanaInput(this, 'errDesc')"></textarea>
+              <textarea name="deskripsi" id="costumeDesc" class="busana-textarea" maxlength="1000" placeholder="The narrative soul of this creation..." oninput="validateBusanaInput(this, 'errDesc')"></textarea>
               <div id="errDesc" class="ds-error-msg" style="display:none; color:#F44336; font-size:9px; margin-top:4px;">Filosofi/Deskripsi kostum wajib diisi!</div>
           </div>
 
           <div class="busana-actions mt-48">
-              <button id="btnSubmitBusana" class="ds-btn-primary-large" style="width: auto; padding: 14px 32px; font-size: 10px;" onclick="submitBusanaForm()">ARCHIVE GARMENT</button>
-              <button class="busana-btn-text" onclick="window.location.href='index.php?page=archive'">DISCARD DRAFT</button>
+              <button type="button" id="btnSubmitBusana" class="ds-btn-primary-large" style="width: auto; padding: 14px 32px; font-size: 10px;" onclick="submitBusanaForm()">ARCHIVE GARMENT</button>
+              <button type="button" class="busana-btn-text" onclick="window.location.href='index.php?page=archive'">DISCARD DRAFT</button>
           </div>
      </div>
      
@@ -58,7 +112,7 @@
      <div class="busana-sidebar">
           <label class="busana-label" style="color: var(--text-secondary);">IMAGE ARCHIVE PORTFOLIO</label>
           <div class="busana-upload-box" onclick="document.getElementById('busanaUpload').click()" style="cursor: pointer;">
-              <input type="file" id="busanaUpload" multiple accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+              <input type="file" name="gambar" id="busanaUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
               <i class="ph-fill ph-cloud-arrow-up busana-upload-icon"></i>
               <h4>Visual Captures</h4>
               <p>Upload high-resolution editorial photography of the garment.</p>
@@ -78,10 +132,27 @@
           </div>
      </div>
   </div>
+  </form>
 
 </div>
 
 <script>
+    function toggleModelPrice(kategori) {
+        const wrap = document.getElementById('wrapModelPrice');
+        const grid = document.getElementById('priceGrid');
+        const inp  = document.getElementById('rentalModelPrice');
+        if (kategori === 'kostum_karnaval') {
+            wrap.style.display = '';
+            grid.style.gridTemplateColumns = '1fr 1fr 1fr';
+            inp.name = 'rental_model_price';
+        } else {
+            wrap.style.display = 'none';
+            grid.style.gridTemplateColumns = '1fr 1fr';
+            inp.value = '0';
+            inp.name  = 'rental_model_price'; // still submitted as 0
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const textareas = document.querySelectorAll('.busana-textarea');
         textareas.forEach(textarea => {
@@ -104,12 +175,20 @@
             descArea.addEventListener('input', updateCount);
             updateCount(); // Run once on load
         }
+
+        // Run toggle on load to match default selected category
+        const sel = document.getElementById('kategoriSelect');
+        if (sel) toggleModelPrice(sel.value);
     });
 
     function handleImageUpload(event) {
         const files = event.target.files;
         const container = document.getElementById('imagePreviewContainer');
         const addMoreBtn = container.querySelector('.busana-add-more');
+        
+        // Bersihkan preview sebelumnya agar sinkron dengan input file 
+        const existingImgs = container.querySelectorAll('img');
+        existingImgs.forEach(img => img.remove());
         
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
@@ -126,9 +205,6 @@
             };
             reader.readAsDataURL(file);
         }
-        
-        // Reset the input so the same files can be selected again if needed
-        event.target.value = '';
     }
 
     function validateBusanaInput(inputEl, errId) {
@@ -175,10 +251,10 @@
             btn.style.opacity = '0.8';
             btn.style.pointerEvents = 'none';
 
-            // Simulate server lag then redirect
+            // Submit form
             setTimeout(() => {
-                window.location.href = 'index.php?page=archive';
-            }, 1000);
+                document.getElementById('formTambahBusana').submit();
+            }, 500);
         }
     }
 </script>

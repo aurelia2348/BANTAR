@@ -14,6 +14,27 @@
     overflow: hidden;
 }
 
+.login-body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #0b0c10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Outfit', sans-serif;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+body.bg-dark {
+    overflow-x: hidden;
+}
+
 /* Background animated glowing orbs */
 .login-bg-shape {
     position: absolute;
