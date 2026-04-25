@@ -2,7 +2,13 @@
 require_once 'koneksi.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_busana'])) {
-    $nama_designer = mysqli_real_escape_string($koneksi, $_POST['nama_designer'] ?? '');
+    $id_designer = (int)($_POST['id_designer'] ?? 0);
+    
+    // Ambil full_name dari tabel users berdasarkan id_designer
+    $res_user = mysqli_query($koneksi, "SELECT full_name FROM users WHERE id = $id_designer");
+    $user_data = mysqli_fetch_assoc($res_user);
+    $nama_designer = mysqli_real_escape_string($koneksi, $user_data['full_name'] ?? '');
+
     $nama_kostum = mysqli_real_escape_string($koneksi, $_POST['nama_kostum'] ?? '');
     $kategori = mysqli_real_escape_string($koneksi, $_POST['kategori'] ?? '');
     $deskripsi = mysqli_real_escape_string($koneksi, $_POST['deskripsi'] ?? '');
@@ -23,8 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_busana'])) {
         }
     }
 
-    $sql = "INSERT INTO stok_kostum (nama_designer, nama_kostum, kategori, deskripsi, rental_price, rental_model_price, jumlah, gambar) 
-            VALUES ('$nama_designer', '$nama_kostum', '$kategori', '$deskripsi', '$rental_price', '$rental_model_price', '$jumlah', '$gambar_path')";
+    $sql = "INSERT INTO stok_kostum (id_designer, nama_designer, nama_kostum, kategori, deskripsi, rental_price, rental_model_price, jumlah, gambar) 
+            VALUES ('$id_designer', '$nama_designer', '$nama_kostum', '$kategori', '$deskripsi', '$rental_price', '$rental_model_price', '$jumlah', '$gambar_path')";
 
     if (mysqli_query($koneksi, $sql)) {
         echo "<script>alert('Busana berhasil diarsipkan!'); window.location.href='index.php?page=archive';</script>";
@@ -53,8 +59,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_busana'])) {
               <div class="busana-field">
                   <label>DESIGNER NAME <span style="color:#F44336">*</span></label>
                   <div class="busana-input-wrapper">
-                      <input type="text" name="nama_designer" id="designerName" value="Elena Vanhoutte" oninput="validateBusanaInput(this, 'errDesigner')" />
-                      <i class="ph ph-scribble-loop" style="transform: translateY(-50%) rotate(-15deg);"></i>
+                      <select name="id_designer" id="designerId" onchange="validateBusanaInput(this, 'errDesigner')">
+                          <option value="">Select Designer</option>
+                          <?php
+                          $query_users = mysqli_query($koneksi, "SELECT id, full_name FROM users ORDER BY full_name ASC");
+                          while ($user = mysqli_fetch_assoc($query_users)) {
+                              echo "<option value='{$user['id']}'>{$user['full_name']}</option>";
+                          }
+                          ?>
+                      </select>
+                      <i class="ph-fill ph-caret-down"></i>
                   </div>
                   <div id="errDesigner" class="ds-error-msg" style="display:none; color:#F44336; font-size:9px; margin-top:4px;">Nama desainer wajib diisi!</div>
               </div>
@@ -214,8 +228,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_busana'])) {
 
         if (!val.trim()) {
             errorText = 'Wajib diisi!';
-        } else if (inputEl.id === 'designerName' && /\d/.test(val)) {
-            errorText = 'Nama desainer tidak boleh mengandung angka!';
         }
 
         if (errorText) {
@@ -233,12 +245,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_busana'])) {
     }
 
     function submitBusanaForm() {
-        const dName = document.getElementById('designerName');
+        const dId = document.getElementById('designerId');
         const cName = document.getElementById('costumeName');
         const cDesc = document.getElementById('costumeDesc');
         let valid = true;
 
-        [ {el: dName, err: 'errDesigner'}, {el: cName, err: 'errCostume'}, {el: cDesc, err: 'errDesc'} ].forEach(item => {
+        [ {el: dId, err: 'errDesigner'}, {el: cName, err: 'errCostume'}, {el: cDesc, err: 'errDesc'} ].forEach(item => {
             validateBusanaInput(item.el, item.err);
             if (item.el.classList.contains('invalid-input')) {
                 valid = false;
