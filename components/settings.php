@@ -21,11 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_user'])) {
         <!-- Sidebar Tabs -->
         <div class="settings-sidebar">
             <ul class="settings-nav">
-                <li class="settings-nav-item active" data-target="pane-rules">
-                    <i class="ph ph-sliders"></i>
-                    Rental Rules
-                </li>
-                <li class="settings-nav-item" data-target="pane-users">
+                <li class="settings-nav-item active" data-target="pane-users">
                     <i class="ph ph-users"></i>
                     User Management
                 </li>
@@ -39,42 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_user'])) {
         <!-- Main Content Area -->
         <div class="settings-content">
             
-            <!-- Pane 1: Rental Rules -->
-            <div class="settings-pane active" id="pane-rules">
-                <div class="settings-header">
-                    <h2>Master Configurations</h2>
-                    <p>Setup system-wide default parameters for rentals and violations.</p>
-                </div>
-                
-                <div class="settings-card">
-                    <div class="settings-card-title">Default Governance</div>
-                    <div class="settings-form-row" style="grid-template-columns: 1fr;">
-                        <div class="settings-field">
-                            <label>Default Rental Duration (Days)</label>
-                            <input type="number" class="settings-input" value="3" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="settings-card">
-                    <div class="settings-card-title">Penalty & Violations</div>
-                    <div class="settings-form-row"> 
-                        <div class="settings-field">
-                            <label>Late Return Fee / Day (Rp)</label>
-                            <input type="number" class="settings-input" value="100000" />
-                        </div>
-                        <div class="settings-field">
-                            <label>Severe Damage Retain Limit (%)</label>
-                            <input type="number" class="settings-input" value="100" />
-                        </div>
-                    </div>
-                </div>
-
-                <button class="settings-btn-primary">SAVE CONFIGURATIONS</button>
-            </div>
-
             <!-- Pane 2: User Management -->
-            <div class="settings-pane" id="pane-users">
+            <div class="settings-pane active" id="pane-users">
                 <div class="settings-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
                     <div>
                         <h2>Access & Privileges</h2>

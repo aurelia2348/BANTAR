@@ -94,9 +94,9 @@ foreach ($sewa_rows as $s) {
     <!-- Filters Bar -->
     <div class="rh-filters-bar">
         <div class="rh-pills-group">
-            <div class="rh-pill active">ALL</div>
-            <div class="rh-pill outline">BELUM SELESAI</div>
-            <div class="rh-pill outline">SELESAI</div>
+            <div class="rh-pill active" onclick="filterStatus(this, 'all')">ALL</div>
+            <div class="rh-pill outline" onclick="filterStatus(this, 'active')">BELUM SELESAI</div>
+            <div class="rh-pill outline" onclick="filterStatus(this, 'completed')">SELESAI</div>
         </div>
         <div class="rh-adv-filters">
             <i class="ph ph-funnel-simple"></i> ADVANCED FILTERS
@@ -534,6 +534,32 @@ function filterTable(q) {
     document.querySelectorAll('#rhTable tbody tr').forEach(row => {
         const text = row.innerText.toLowerCase();
         row.style.display = (!q || text.includes(q)) ? '' : 'none';
+    });
+}
+
+// ── Table status filter ───────────────────────────────────────────────────────
+function filterStatus(btn, status) {
+    document.querySelectorAll('.rh-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    btn.classList.remove('outline');
+    
+    document.querySelectorAll('.rh-pill:not(.active)').forEach(p => p.classList.add('outline'));
+    
+    document.querySelectorAll('#rhTable tbody tr').forEach(row => {
+        if(row.querySelector('td[colspan="8"]')) return;
+        
+        const pill = row.querySelector('.rh-status-pill');
+        if (!pill) return;
+
+        if(status === 'all') {
+            row.style.display = '';
+        } else if(status === 'active' && pill.classList.contains('rh-status-active')) {
+            row.style.display = '';
+        } else if(status === 'completed' && pill.classList.contains('rh-status-completed')) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
     });
 }
 

@@ -1,5 +1,52 @@
+<?php
+// Mock Data Generation
+$dummy_transactions = [];
+$total_dummy = 48;
+$statuses = [
+    ['status' => 'CURRENTLY RENTED', 'class' => 'rh-status-active'],
+    ['status' => 'COMPLETED & PAID', 'class' => 'rh-status-completed'],
+    ['status' => 'COMPLETED & PENDING', 'class' => 'rh-status-completed'],
+];
+$costumes = [
+    ['name' => 'Midnight Structure', 'img' => 'assets/catalog_1.png', 'fee' => 7500000],
+    ['name' => 'Archival Silk Dinner Shirt', 'img' => 'assets/catalog_2.png', 'fee' => 4000000],
+    ['name' => 'Alabaster Fold', 'img' => 'assets/catalog_3.png', 'fee' => 3600000],
+    ['name' => 'Crimson Cascade', 'img' => 'assets/catalog_1.png', 'fee' => 5000000],
+    ['name' => 'Velvet Silhouette', 'img' => 'assets/catalog_2.png', 'fee' => 6200000],
+];
+
+for ($i = 0; $i < $total_dummy; $i++) {
+    $c = $costumes[$i % count($costumes)];
+    $s = $statuses[$i % count($statuses)];
+    $ord = 9821 - $i * 11;
+
+    $dummy_transactions[] = [
+        'id' => "ORD-<br>$ord",
+        'costume' => $c['name'],
+        'img' => $c['img'],
+        'date' => "Oct " . str_pad(12 - ($i % 10), 2, '0', STR_PAD_LEFT) . ", 2024 —<br>Oct " . str_pad(15 - ($i % 10), 2, '0', STR_PAD_LEFT) . ", 2024",
+        'fee' => $c['fee'],
+        'royalty' => $c['fee'] * 0.7,
+        'status_text' => $s['status'],
+        'status_class' => $s['class']
+    ];
+}
+
+$per_page = 10;
+$page_num = max(1, (int)($_GET['hd_page'] ?? 1));
+$total_pages = ceil($total_dummy / $per_page);
+$offset = ($page_num - 1) * $per_page;
+
+$current_items = array_slice($dummy_transactions, $offset, $per_page);
+
+function fmtRpHd($n)
+{
+    return 'Rp ' . number_format((float)$n, 0, ',', '.');
+}
+?>
+
 <div class="ds-content">
-    
+
     <!-- Top Header & Search -->
     <div class="rh-top-section">
         <div>
@@ -46,86 +93,33 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Row 1 -->
-                <tr class="rh-row-clickable" onclick="openTransactionModal(this)">
-                    <td>
-                        <div class="rh-col-id">ORD-<br>9821</div>
-                    </td>
-                    <td>
-                        <div class="rh-col-costume">
-                            <img src="assets/catalog_1.png" alt="Costume" class="rh-col-costume-img">
-                            <span class="rh-col-costume-name">Midnight Structure</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="rh-col-date">Oct 12, 2024 —<br>Oct 15, 2024</div>
-                    </td>
-                    <td style="text-align: right;">
-                        <span class="rh-col-amount" style="color: var(--text-secondary); font-size: 13px;">Rp 7.500.000</span>
-                    </td>
-                    <td style="text-align: right;">
-                        <span class="rh-col-amount" style="color: var(--accent-gold); font-weight: 700;">Rp 5.250.000</span>
-                    </td>
-                    <td>
-                        <div class="rh-status-pill rh-status-active">
-                            <span class="rh-status-dot"></span> CURRENTLY RENTED
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- Row 2 -->
-                <tr class="rh-row-clickable" onclick="openTransactionModal(this)">
-                    <td>
-                        <div class="rh-col-id">ORD-<br>9780</div>
-                    </td>
-                    <td>
-                        <div class="rh-col-costume">
-                            <img src="assets/catalog_2.png" alt="Costume" class="rh-col-costume-img">
-                            <span class="rh-col-costume-name">Archival Silk Dinner Shirt</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="rh-col-date">Oct 01, 2024 —<br>Oct 03, 2024</div>
-                    </td>
-                    <td style="text-align: right;">
-                        <span class="rh-col-amount" style="color: var(--text-secondary); font-size: 13px;">Rp 4.000.000</span>
-                    </td>
-                    <td style="text-align: right;">
-                        <span class="rh-col-amount" style="color: var(--accent-gold); font-weight: 700;">Rp 2.800.000</span>
-                    </td>
-                    <td>
-                        <div class="rh-status-pill rh-status-completed">
-                            <span class="rh-status-dot"></span> COMPLETED & PAID
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- Row 3 -->
-                <tr class="rh-row-clickable" onclick="openTransactionModal(this)">
-                    <td>
-                        <div class="rh-col-id" style="color: #F44336; opacity: 0.8;">ORD-<br>9711</div>
-                    </td>
-                    <td>
-                        <div class="rh-col-costume">
-                            <img src="assets/catalog_3.png" alt="Costume" class="rh-col-costume-img">
-                            <span class="rh-col-costume-name">Alabaster Fold</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="rh-col-date">Sep 20, 2024 —<br>Sep 22, 2024</div>
-                    </td>
-                    <td style="text-align: right;">
-                        <span class="rh-col-amount" style="color: var(--text-secondary); font-size: 13px;">Rp 3.600.000</span>
-                    </td>
-                    <td style="text-align: right;">
-                        <span class="rh-col-amount" style="color: var(--accent-gold); font-weight: 700;">Rp 2.520.000</span>
-                    </td>
-                    <td>
-                        <div class="rh-status-pill rh-status-completed">
-                            <span class="rh-status-dot"></span> COMPLETED & PAID
-                        </div>
-                    </td>
-                </tr>
+                <?php foreach ($current_items as $item): ?>
+                    <tr class="rh-row-clickable" onclick="openTransactionModal(this)">
+                        <td>
+                            <div class="rh-col-id"><?= $item['id'] ?></div>
+                        </td>
+                        <td>
+                            <div class="rh-col-costume">
+                                <img src="<?= $item['img'] ?>" alt="Costume" class="rh-col-costume-img">
+                                <span class="rh-col-costume-name"><?= $item['costume'] ?></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="rh-col-date"><?= $item['date'] ?></div>
+                        </td>
+                        <td style="text-align: right;">
+                            <span class="rh-col-amount" style="color: var(--text-secondary); font-size: 13px;"><?= fmtRpHd($item['fee']) ?></span>
+                        </td>
+                        <td style="text-align: right;">
+                            <span class="rh-col-amount" style="color: var(--accent-gold); font-weight: 700;"><?= fmtRpHd($item['royalty']) ?></span>
+                        </td>
+                        <td>
+                            <div class="rh-status-pill <?= $item['status_class'] ?>">
+                                <span class="rh-status-dot"></span> <?= $item['status_text'] ?>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
@@ -133,15 +127,30 @@
     <!-- Pagination -->
     <div class="rh-pagination-bar">
         <div class="rh-pag-info">
-            SHOWING 3 OF 48 STUDIO TRANSACTIONS
+            SHOWING <?= min((($total_dummy > 0) ? $offset + 1 : 0), $total_dummy) ?>–<?= min($offset + $per_page, $total_dummy) ?> OF <?= $total_dummy ?> STUDIO TRANSACTIONS
         </div>
         <div class="rh-pag-controls">
-            <span class="rh-pag-btn">&lt; Previous</span>
-            <span class="rh-pag-num active">01</span>
-            <span class="rh-pag-num">02</span>
-            <span>...</span>
-            <span class="rh-pag-num">15</span>
-            <span class="rh-pag-btn">Next &gt;</span>
+            <?php if ($page_num > 1): ?>
+                <a href="?page=history-desainer&hd_page=<?= $page_num - 1 ?>" class="rh-pag-btn">&lt; Previous</a>
+            <?php else: ?>
+                <span class="rh-pag-btn" style="opacity:0.3;">&#60; Previous</span>
+            <?php endif; ?>
+
+            <?php for ($p = 1; $p <= $total_pages; $p++): ?>
+                <?php if ($p === $page_num): ?>
+                    <span class="rh-pag-num active"><?= str_pad($p, 2, '0', STR_PAD_LEFT) ?></span>
+                <?php elseif ($p <= 3 || $p >= $total_pages - 1 || abs($p - $page_num) <= 1): ?>
+                    <a href="?page=history-desainer&hd_page=<?= $p ?>" class="rh-pag-num"><?= str_pad($p, 2, '0', STR_PAD_LEFT) ?></a>
+                <?php elseif ($p === 4 && $page_num > 4): ?>
+                    <span>...</span>
+                <?php endif; ?>
+            <?php endfor; ?>
+
+            <?php if ($page_num < $total_pages): ?>
+                <a href="?page=history-desainer&hd_page=<?= $page_num + 1 ?>" class="rh-pag-btn">Next &gt;</a>
+            <?php else: ?>
+                <span class="rh-pag-btn" style="opacity:0.3;">Next &#62;</span>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -149,7 +158,7 @@
     <div class="rh-modal-overlay" id="transactionModal">
         <div class="rh-modal-content">
             <i class="ph ph-x rh-modal-close" onclick="closeTransactionModal()"></i>
-            
+
             <div class="rh-modal-header">
                 <div>
                     <h2 class="rh-modal-title">Royalty Detail</h2>
@@ -220,9 +229,13 @@
         var totalFeeNum = parseInt(totalFeeTxt.replace(/[^0-9]/g, ''));
         var platformFeeNum = totalFeeNum * 0.3;
         var platformFeeTxt = 'Rp ' + platformFeeNum.toLocaleString('id-ID');
-        
+
         // Setup current date
-        var todayOpts = { year: 'numeric', month: 'long', day: 'numeric' };
+        var todayOpts = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        };
         var today = new Date().toLocaleDateString('en-GB', todayOpts).toUpperCase();
 
         document.getElementById('modal-order-id').innerText = orderId;

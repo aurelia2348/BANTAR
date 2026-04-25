@@ -14,8 +14,6 @@ $result = mysqli_query($koneksi, "SELECT * FROM stok_kostum ORDER BY id DESC");
             </p>
         </div>
         <div class="ds-actions" style="display: flex; gap: 16px; align-self: center;">
-            <button class="ds-btn-outline">FILTER</button>
-            <button class="ds-btn-outline">SORT: RECENT</button>
         </div>
     </div>
 
