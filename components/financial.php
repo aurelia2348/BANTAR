@@ -1,25 +1,54 @@
 <?php
 require_once __DIR__ . '/../koneksi.php';
 
+$filter_month = isset($_GET['month']) ? str_pad($_GET['month'], 2, '0', STR_PAD_LEFT) : date('m');
+$filter_year  = $_GET['year'] ?? date('Y');
+
+$m_int = (int)$filter_month;
+$y_int = (int)$filter_year;
+
+$where_clause = "WHERE MONTH(COALESCE(p.tanggal_kembali_sebenarnya, lk.tanggal_transaksi)) = $m_int 
+                   AND YEAR(COALESCE(p.tanggal_kembali_sebenarnya, lk.tanggal_transaksi)) = $y_int";
+
 // ── Agregat untuk stat cards ─────────────────────────────────────────────────
 $agg = mysqli_fetch_assoc(mysqli_query($koneksi, "
     SELECT
-        COALESCE(SUM(total_pemasukan), 0) AS gross,
-        COALESCE(SUM(bantar_share),    0) AS bantar,
-        COALESCE(SUM(designer_share),  0) AS designer,
-        COALESCE(SUM(model_share),     0) AS model
-    FROM laporan_keuangan
+        COALESCE(SUM(lk.total_pemasukan), 0) AS gross,
+        COALESCE(SUM(lk.bantar_share),    0) AS bantar,
+        COALESCE(SUM(lk.designer_share),  0) AS designer,
+        COALESCE(SUM(lk.model_share),     0) AS model
+    FROM laporan_keuangan lk
+    LEFT JOIN pengembalian p ON p.sewa_id = lk.sewa_id
+    $where_clause
 "));
+
+// ── Pagination ──────────────────────────────────────────────────────────────
+$per_page = 10;
+$page_num = max(1, (int)($_GET['fin_page'] ?? 1));
+$offset   = ($page_num - 1) * $per_page;
+
+$count_query = mysqli_query($koneksi, "
+    SELECT COUNT(*) AS c
+    FROM laporan_keuangan lk
+    LEFT JOIN pengembalian p ON p.sewa_id = lk.sewa_id
+    $where_clause
+");
+$total_count = (int)mysqli_fetch_assoc($count_query)['c'];
+$total_pages = max(1, ceil($total_count / $per_page));
 
 // ── Fetch ledger rows (join sewa untuk nama penyewa) ─────────────────────────
 $ledger = mysqli_query($koneksi, "
     SELECT lk.*,
            s.nama_penyewa,
            s.tanggal_sewa,
-           s.tanggal_kembali
+           s.tanggal_kembali,
+           p.tanggal_kembali_sebenarnya
     FROM laporan_keuangan lk
     JOIN sewa s ON s.id = lk.sewa_id
-    ORDER BY lk.tanggal_transaksi DESC, lk.id DESC
+    LEFT JOIN pengembalian p ON p.sewa_id = lk.sewa_id
+    $where_clause
+    ORDER BY COALESCE(p.tanggal_kembali_sebenarnya, lk.tanggal_transaksi) DESC, lk.id DESC
+    LIMIT $per_page OFFSET $offset
 ");
 
 function rpFmt($n) {
@@ -38,7 +67,37 @@ function rpFmt($n) {
             </p>
         </div>
         <div class="fin-top-actions">
-            <button class="fin-btn fin-btn-outline"><i class="ph ph-funnel"></i> FILTER PERIOD</button>
+            <form method="GET" action="index.php" style="display: flex; gap: 8px; align-items: center; margin: 0;">
+                <input type="hidden" name="page" value="financial">
+                <div style="position: relative;">
+                    <select name="month" onchange="this.form.submit()" class="fin-btn fin-btn-outline" style="appearance: none; padding-right: 32px; outline: none; cursor: pointer; text-transform: uppercase;">
+                        <?php
+                        $months = [
+                            '01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr',
+                            '05' => 'May', '06' => 'Jun', '07' => 'Jul', '08' => 'Aug',
+                            '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'
+                        ];
+                        foreach ($months as $num => $name) {
+                            $sel = ($filter_month === $num) ? 'selected' : '';
+                            echo "<option value='$num' $sel style='color:#000;'>$name</option>";
+                        }
+                        ?>
+                    </select>
+                    <i class="ph-fill ph-caret-down" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 10px;"></i>
+                </div>
+                <div style="position: relative;">
+                    <select name="year" onchange="this.form.submit()" class="fin-btn fin-btn-outline" style="appearance: none; padding-right: 32px; outline: none; cursor: pointer;">
+                        <?php
+                        $currentYear = date('Y');
+                        for ($y = $currentYear; $y >= 2023; $y--) {
+                            $sel = ($filter_year == $y) ? 'selected' : '';
+                            echo "<option value='$y' $sel style='color:#000;'>$y</option>";
+                        }
+                        ?>
+                    </select>
+                    <i class="ph-fill ph-caret-down" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 10px;"></i>
+                </div>
+            </form>
             <button class="fin-btn fin-btn-primary"><i class="ph-fill ph-file-pdf"></i> EXPORT TO PDF</button>
         </div>
     </div>
@@ -110,9 +169,11 @@ function rpFmt($n) {
             <tbody>
             <?php if ($ledger && mysqli_num_rows($ledger) > 0):
                 while ($row = mysqli_fetch_assoc($ledger)):
-                    $tgl = $row['tanggal_transaksi']
-                        ? date('d M Y', strtotime($row['tanggal_transaksi']))
-                        : '–';
+                    $tgl = !empty($row['tanggal_kembali_sebenarnya'])
+                        ? date('d M Y', strtotime($row['tanggal_kembali_sebenarnya']))
+                        : ($row['tanggal_transaksi']
+                            ? date('d M Y', strtotime($row['tanggal_transaksi']))
+                            : '–');
                     
                     $dk = (float)$row['denda_keterlambatan'];
                     $dl = (float)$row['denda_lain'];
@@ -178,6 +239,40 @@ function rpFmt($n) {
             <?php endif; ?>
             </tbody>
         </table>
+
+        <!-- Pagination -->
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px; margin-top: 16px;">
+            <div style="font-size: 11px; color: var(--text-secondary); letter-spacing: 1px;">
+                <?php if ($total_count > 0): ?>
+                SHOWING <?= min($offset + 1, $total_count) ?>–<?= min($offset + $per_page, $total_count) ?> OF <?= $total_count ?> TRANSACTIONS
+                <?php else: ?>
+                SHOWING 0 TRANSACTIONS
+                <?php endif; ?>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <?php if ($page_num > 1): ?>
+                <a href="?page=financial&month=<?= $m_int ?>&year=<?= $y_int ?>&fin_page=<?= $page_num - 1 ?>" style="color: var(--text-secondary); text-decoration: none; font-size: 11px; padding: 4px 8px; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;">&lt; Previous</a>
+                <?php else: ?>
+                <span style="opacity:0.3; font-size: 11px; color: var(--text-secondary); padding: 4px 8px; border: 1px solid rgba(255,255,255,0.05); border-radius: 4px;">&lt; Previous</span>
+                <?php endif; ?>
+
+                <?php for ($p = 1; $p <= $total_pages; $p++): ?>
+                    <?php if ($p === $page_num): ?>
+                    <span style="color: var(--accent-gold); font-weight: bold; font-size: 12px; margin: 0 4px;"><?= str_pad($p, 2, '0', STR_PAD_LEFT) ?></span>
+                    <?php elseif ($p <= 3 || $p >= $total_pages - 1 || abs($p - $page_num) <= 1): ?>
+                    <a href="?page=financial&month=<?= $m_int ?>&year=<?= $y_int ?>&fin_page=<?= $p ?>" style="color: var(--text-secondary); text-decoration: none; font-size: 12px; margin: 0 4px;"><?= str_pad($p, 2, '0', STR_PAD_LEFT) ?></a>
+                    <?php elseif ($p === 4 && $page_num > 4): ?>
+                    <span style="color: var(--text-secondary); margin: 0 4px;">...</span>
+                    <?php endif; ?>
+                <?php endfor; ?>
+
+                <?php if ($page_num < $total_pages): ?>
+                <a href="?page=financial&month=<?= $m_int ?>&year=<?= $y_int ?>&fin_page=<?= $page_num + 1 ?>" style="color: var(--text-secondary); text-decoration: none; font-size: 11px; padding: 4px 8px; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;">Next &gt;</a>
+                <?php else: ?>
+                <span style="opacity:0.3; font-size: 11px; color: var(--text-secondary); padding: 4px 8px; border: 1px solid rgba(255,255,255,0.05); border-radius: 4px;">Next &gt;</span>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 
     <!-- Bottom Panels -->

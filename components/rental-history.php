@@ -1,14 +1,58 @@
 <?php
 require_once __DIR__ . '/../koneksi.php';
 
+// ── Filter Logic ────────────────────────────────────────────────────────────
+function buildUrl($updates) {
+    $params = $_GET;
+    $params['page'] = 'rental-history';
+    foreach ($updates as $k => $v) {
+        if ($v === null || $v === '') {
+            unset($params[$k]);
+        } else {
+            $params[$k] = $v;
+        }
+    }
+    return 'index.php?' . http_build_query($params);
+}
+
+$where_clauses = [];
+if (!empty($_GET['rh_status']) && $_GET['rh_status'] !== 'all') {
+    $st = mysqli_real_escape_string($koneksi, $_GET['rh_status']);
+    $where_clauses[] = "s.status = '$st'";
+}
+if (!empty($_GET['rh_id'])) {
+    $id = (int)$_GET['rh_id'];
+    $where_clauses[] = "s.id = $id";
+}
+if (!empty($_GET['rh_month'])) {
+    $m = mysqli_real_escape_string($koneksi, $_GET['rh_month']);
+    $where_clauses[] = "MONTH(s.tanggal_sewa) = '$m'";
+}
+if (!empty($_GET['rh_year'])) {
+    $y = mysqli_real_escape_string($koneksi, $_GET['rh_year']);
+    $where_clauses[] = "YEAR(s.tanggal_sewa) = '$y'";
+}
+if (!empty($_GET['rh_search'])) {
+    $sch = mysqli_real_escape_string($koneksi, $_GET['rh_search']);
+    $where_clauses[] = "(s.nama_penyewa LIKE '%$sch%' OR sk.nama_kostum LIKE '%$sch%')"; 
+}
+
+$join_sql = "
+    LEFT JOIN detail_sewa ds ON ds.id = (
+        SELECT MIN(d2.id) FROM detail_sewa d2 WHERE d2.sewa_id = s.id
+    )
+    LEFT JOIN stok_kostum sk ON sk.id = ds.kostum_id
+";
+
+$where_sql = !empty($where_clauses) ? "WHERE " . implode(" AND ", $where_clauses) : "";
+
 // ── Pagination ──────────────────────────────────────────────────────────────
 $per_page  = 10;
 $page_num  = max(1, (int)($_GET['rh_page'] ?? 1));
 $offset    = ($page_num - 1) * $per_page;
 
-$total_count = (int)mysqli_fetch_assoc(
-    mysqli_query($koneksi, "SELECT COUNT(*) AS c FROM sewa")
-)['c'];
+$count_query = "SELECT COUNT(*) AS c FROM sewa s $join_sql $where_sql";
+$total_count = (int)mysqli_fetch_assoc(mysqli_query($koneksi, $count_query))['c'];
 $total_pages = max(1, ceil($total_count / $per_page));
 
 // ── Main list: sewa + first costume ─────────────────────────────────────────
@@ -17,10 +61,8 @@ $sewa_result = mysqli_query($koneksi, "
            sk.nama_kostum AS first_kostum,
            sk.gambar      AS first_gambar
     FROM sewa s
-    LEFT JOIN detail_sewa ds ON ds.id = (
-        SELECT MIN(d2.id) FROM detail_sewa d2 WHERE d2.sewa_id = s.id
-    )
-    LEFT JOIN stok_kostum sk ON sk.id = ds.kostum_id
+    $join_sql
+    $where_sql
     ORDER BY s.created_at DESC
     LIMIT $per_page OFFSET $offset
 ");
@@ -54,6 +96,7 @@ foreach ($sewa_rows as $s) {
     $items = [];
     foreach (($details_map[$sid] ?? []) as $d) {
         $items[] = [
+            'id'            => (int)$d['id'],
             'nama_kostum'   => $d['nama_kostum'],
             'qty'           => (int)$d['qty'],
             'harga'         => (float)$d['harga'],
@@ -87,20 +130,67 @@ foreach ($sewa_rows as $s) {
         </div>
         <div class="rh-search-container">
             <i class="ph ph-magnifying-glass rh-search-icon"></i>
-            <input type="text" class="rh-search-input" placeholder="Search tenant or costume..." oninput="filterTable(this.value)">
+            <form method="GET" action="index.php" style="display:inline;" id="searchForm">
+                <input type="hidden" name="page" value="rental-history">
+                <input type="hidden" name="rh_status" value="<?= htmlspecialchars($_GET['rh_status'] ?? 'all') ?>">
+                <input type="hidden" name="rh_id" value="<?= htmlspecialchars($_GET['rh_id'] ?? '') ?>">
+                <input type="hidden" name="rh_month" value="<?= htmlspecialchars($_GET['rh_month'] ?? '') ?>">
+                <input type="hidden" name="rh_year" value="<?= htmlspecialchars($_GET['rh_year'] ?? '') ?>">
+                <input type="text" name="rh_search" class="rh-search-input" placeholder="Search tenant or costume..." value="<?= htmlspecialchars($_GET['rh_search'] ?? '') ?>">
+                <button type="submit" style="display:none;"></button>
+            </form>
         </div>
     </div>
 
     <!-- Filters Bar -->
     <div class="rh-filters-bar">
         <div class="rh-pills-group">
-            <div class="rh-pill active">ALL</div>
-            <div class="rh-pill outline">BELUM SELESAI</div>
-            <div class="rh-pill outline">SELESAI</div>
+            <a href="<?= buildUrl(['rh_status' => 'all', 'rh_page' => 1]) ?>" class="rh-pill <?= (($_GET['rh_status'] ?? 'all') === 'all') ? 'active' : 'outline' ?>" style="text-decoration:none; color:inherit;">ALL</a>
+            <a href="<?= buildUrl(['rh_status' => 'dipinjam', 'rh_page' => 1]) ?>" class="rh-pill <?= (($_GET['rh_status'] ?? '') === 'dipinjam') ? 'active' : 'outline' ?>" style="text-decoration:none; color:inherit;">BELUM SELESAI</a>
+            <a href="<?= buildUrl(['rh_status' => 'selesai', 'rh_page' => 1]) ?>" class="rh-pill <?= (($_GET['rh_status'] ?? '') === 'selesai') ? 'active' : 'outline' ?>" style="text-decoration:none; color:inherit;">SELESAI</a>
         </div>
-        <div class="rh-adv-filters">
+        <div class="rh-adv-filters" onclick="toggleAdvFilters()" style="cursor:pointer;">
             <i class="ph ph-funnel-simple"></i> ADVANCED FILTERS
         </div>
+    </div>
+
+    <!-- Advanced Filters Panel -->
+    <div id="advFiltersPanel" style="display: <?= !empty($_GET['rh_id']) || !empty($_GET['rh_month']) || !empty($_GET['rh_year']) ? 'flex' : 'none' ?>; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+        <form method="GET" action="index.php" style="display: flex; gap: 16px; align-items: flex-end; flex-wrap:wrap; width:100%;">
+            <input type="hidden" name="page" value="rental-history">
+            <input type="hidden" name="rh_status" value="<?= htmlspecialchars($_GET['rh_status'] ?? 'all') ?>">
+            <input type="hidden" name="rh_search" value="<?= htmlspecialchars($_GET['rh_search'] ?? '') ?>">
+            
+            <div style="flex:1; min-width: 150px;">
+                <label style="display:block; font-size:11px; color:var(--text-secondary); margin-bottom:8px;">ORDER ID</label>
+                <input type="number" name="rh_id" value="<?= htmlspecialchars($_GET['rh_id'] ?? '') ?>" placeholder="e.g. 114" style="width:100%; padding:10px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.1); border-radius:4px; color:#fff; outline:none;">
+            </div>
+            
+            <div style="flex:1; min-width: 150px;">
+                <label style="display:block; font-size:11px; color:var(--text-secondary); margin-bottom:8px;">BULAN</label>
+                <select name="rh_month" style="width:100%; padding:10px; background:var(--bg-dark); border:1px solid rgba(255,255,255,0.1); border-radius:4px; color:#fff; outline:none;">
+                    <option value="">Semua Bulan</option>
+                    <?php for($i=1; $i<=12; $i++): $m = str_pad($i, 2, '0', STR_PAD_LEFT); ?>
+                    <option value="<?= $m ?>" <?= ($_GET['rh_month'] ?? '') === $m ? 'selected' : '' ?>><?= date('F', mktime(0,0,0,$i,10)) ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
+            
+            <div style="flex:1; min-width: 150px;">
+                <label style="display:block; font-size:11px; color:var(--text-secondary); margin-bottom:8px;">TAHUN</label>
+                <select name="rh_year" style="width:100%; padding:10px; background:var(--bg-dark); border:1px solid rgba(255,255,255,0.1); border-radius:4px; color:#fff; outline:none;">
+                    <option value="">Semua Tahun</option>
+                    <?php $cur_yr = date('Y'); for($y=$cur_yr+1; $y>=$cur_yr-5; $y--): ?>
+                    <option value="<?= $y ?>" <?= ($_GET['rh_year'] ?? '') == $y ? 'selected' : '' ?>><?= $y ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
+            
+            <div style="margin-top: 16px; display:flex; align-items:flex-end;">
+                <button type="submit" style="padding:10px 24px; background:var(--accent-gold); color:#000; border:none; border-radius:4px; cursor:pointer; font-weight:600; height:41px;">TERAPKAN</button>
+                <a href="index.php?page=rental-history" style="display:inline-flex; align-items:center; height:41px; padding:0 24px; background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:4px; text-decoration:none; margin-left:8px;">RESET</a>
+            </div>
+        </form>
     </div>
 
     <!-- Table Section -->
@@ -187,7 +277,7 @@ foreach ($sewa_rows as $s) {
         </div>
         <div class="rh-pag-controls">
             <?php if ($page_num > 1): ?>
-            <a href="?page=rental-history&rh_page=<?= $page_num - 1 ?>" class="rh-pag-btn">&lt; Previous</a>
+            <a href="<?= buildUrl(['rh_page' => $page_num - 1]) ?>" class="rh-pag-btn">&lt; Previous</a>
             <?php else: ?>
             <span class="rh-pag-btn" style="opacity:0.3;">&#60; Previous</span>
             <?php endif; ?>
@@ -196,14 +286,14 @@ foreach ($sewa_rows as $s) {
                 <?php if ($p === $page_num): ?>
                 <span class="rh-pag-num active"><?= str_pad($p, 2, '0', STR_PAD_LEFT) ?></span>
                 <?php elseif ($p <= 3 || $p >= $total_pages - 1 || abs($p - $page_num) <= 1): ?>
-                <a href="?page=rental-history&rh_page=<?= $p ?>" class="rh-pag-num"><?= str_pad($p, 2, '0', STR_PAD_LEFT) ?></a>
+                <a href="<?= buildUrl(['rh_page' => $p]) ?>" class="rh-pag-num"><?= str_pad($p, 2, '0', STR_PAD_LEFT) ?></a>
                 <?php elseif ($p === 4 && $page_num > 4): ?>
                 <span>...</span>
                 <?php endif; ?>
             <?php endfor; ?>
 
             <?php if ($page_num < $total_pages): ?>
-            <a href="?page=rental-history&rh_page=<?= $page_num + 1 ?>" class="rh-pag-btn">Next &gt;</a>
+            <a href="<?= buildUrl(['rh_page' => $page_num + 1]) ?>" class="rh-pag-btn">Next &gt;</a>
             <?php else: ?>
             <span class="rh-pag-btn" style="opacity:0.3;">Next &#62;</span>
             <?php endif; ?>
@@ -244,9 +334,9 @@ foreach ($sewa_rows as $s) {
                 <input type="number" id="rf-late-fee" value="0" readonly style="width:100%; padding:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:4px; color:var(--text-secondary); outline:none;">
             </div>
 
-            <div style="margin-bottom: 24px;">
+            <div style="margin-bottom: 24px;" id="rf-other-fees-container">
                 <label style="display:block; font-size:11px; color:var(--text-secondary); margin-bottom:8px; letter-spacing:1px;">DENDA LAIN-LAIN (RP)</label>
-                <input type="number" id="rf-other-fee" value="0" style="width:100%; padding:12px; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:4px; color:#fff; outline:none;">
+                <!-- Inputs generated dynamically -->
             </div>
 
             <div style="display:flex; gap:16px;">
@@ -441,7 +531,21 @@ function openReturnModal(sewaId) {
     actualInput.value = today;
 
     document.getElementById('rf-late-fee').value  = 0;
-    document.getElementById('rf-other-fee').value = 0;
+
+    const otherFeesContainer = document.getElementById('rf-other-fees-container');
+    otherFeesContainer.innerHTML = '<label style="display:block; font-size:11px; color:var(--text-secondary); margin-bottom:8px; letter-spacing:1px;">DENDA LAIN-LAIN PER BAJU (RP)</label>';
+    
+    d.items.forEach((item) => {
+        for (let i = 1; i <= item.qty; i++) {
+            const label = item.qty > 1 ? `${item.nama_kostum} (${i})` : item.nama_kostum;
+            otherFeesContainer.insertAdjacentHTML('beforeend', `
+                <div style="display:flex; align-items:center; margin-bottom:8px;">
+                    <div style="flex:1; font-size:12px; color:#fff;">${label}</div>
+                    <input type="number" class="rf-other-fee-input" data-ds-id="${item.id}" value="0" style="width:150px; padding:8px; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:4px; color:#fff; outline:none; text-align:right;">
+                </div>
+            `);
+        }
+    });
 
     window.currentReturnSewaId = sewaId;
     document.getElementById('returnFormModal').style.display = 'flex';
@@ -459,7 +563,17 @@ function closeReturnModal() {
 function confirmReturn() {
     const sewaId   = window.currentReturnSewaId;
     const lateFee  = parseInt(document.getElementById('rf-late-fee').value)  || 0;
-    const otherFee = parseInt(document.getElementById('rf-other-fee').value) || 0;
+    
+    let otherFeeTotal = 0;
+    const otherFeesMap = {};
+    document.querySelectorAll('.rf-other-fee-input').forEach(input => {
+        const val = parseInt(input.value) || 0;
+        const dsId = input.getAttribute('data-ds-id');
+        if (!otherFeesMap[dsId]) otherFeesMap[dsId] = 0;
+        otherFeesMap[dsId] += val;
+        otherFeeTotal += val;
+    });
+
     const actual   = document.getElementById('rf-actual-date').value;
 
     closeReturnModal();
@@ -468,7 +582,7 @@ function confirmReturn() {
     fetch('script/tandai_selesai.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: `sewa_id=${sewaId}&actual_date=${actual}&late_fee=${lateFee}&other_fee=${otherFee}`
+        body: `sewa_id=${sewaId}&actual_date=${actual}&late_fee=${lateFee}&other_fee=${otherFeeTotal}&other_fee_map=${encodeURIComponent(JSON.stringify(otherFeesMap))}`
     })
     .then(r => r.json())
     .then(res => {
@@ -509,7 +623,10 @@ function confirmReturn() {
 
 // ── Late fee auto-calc ────────────────────────────────────────────────────────
 document.getElementById('rf-actual-date').addEventListener('change', function() {
-    const expectedStr = document.getElementById('rf-return-date').value;
+    const sewaId = window.currentReturnSewaId;
+    if (!sewaId || !SEWA_DATA[sewaId]) return;
+
+    const expectedStr = SEWA_DATA[sewaId].tanggal_kembali;
     const expectedDate = new Date(expectedStr);
     const actualDate   = new Date(this.value);
     const lateFeeInput = document.getElementById('rf-late-fee');
@@ -519,7 +636,8 @@ document.getElementById('rf-actual-date').addEventListener('change', function() 
         actualDate.setHours(0,0,0,0);
         if (actualDate > expectedDate) {
             const diffDays = Math.ceil((actualDate - expectedDate) / 86400000);
-            lateFeeInput.value = diffDays * 25000;
+            const totalCostumes = SEWA_DATA[sewaId].items.reduce((sum, item) => sum + parseInt(item.qty), 0);
+            lateFeeInput.value = diffDays * 25000 * totalCostumes;
         } else {
             lateFeeInput.value = 0;
         }
@@ -528,13 +646,10 @@ document.getElementById('rf-actual-date').addEventListener('change', function() 
     }
 });
 
-// ── Table search filter ───────────────────────────────────────────────────────
-function filterTable(q) {
-    q = q.toLowerCase();
-    document.querySelectorAll('#rhTable tbody tr').forEach(row => {
-        const text = row.innerText.toLowerCase();
-        row.style.display = (!q || text.includes(q)) ? '' : 'none';
-    });
+// ── Toggle advanced filters ──────────────────────────────────────────────────
+function toggleAdvFilters() {
+    const el = document.getElementById('advFiltersPanel');
+    el.style.display = el.style.display === 'none' ? 'flex' : 'none';
 }
 
 // ── Close on outside click ────────────────────────────────────────────────────

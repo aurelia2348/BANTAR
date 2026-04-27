@@ -13,7 +13,11 @@ $result = mysqli_query($koneksi, "SELECT * FROM stok_kostum ORDER BY id DESC");
                 Exploring the boundaries of theatrical elegance. Our current inventory features bespoke pieces from the Victorian era through modern avant-garde.
             </p>
         </div>
-        <div class="ds-actions" style="display: flex; gap: 16px; align-self: center;">
+        <div class="ds-actions" style="display: flex; gap: 16px; align-self: center; align-items: center;">
+            <div style="position: relative;">
+                <i class="ph ph-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                <input type="text" id="searchInput" placeholder="Cari nama busana..." onkeyup="searchCatalog()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 10px 12px 10px 36px; color: #fff; font-family: inherit; font-size: 13px; outline: none; width: 220px; transition: all 0.3s ease;">
+            </div>
             <button class="ds-btn-outline">FILTER</button>
             <button class="ds-btn-outline">SORT: RECENT</button>
         </div>
@@ -61,15 +65,15 @@ $result = mysqli_query($koneksi, "SELECT * FROM stok_kostum ORDER BY id DESC");
             $price_fmt = 'Rp ' . number_format($rental_price, 0, ',', '.');
             $fine_fmt  = number_format($rental_model_price, 0, ',', '.');
 
-            // Safe JS strings
-            $js_img   = addslashes($gambar);
-            $js_nama  = addslashes($item['nama_kostum']);
-            $js_cat   = addslashes($cat_label);
-            $js_price = addslashes($price_fmt);
-            $js_status = addslashes($badge_text);
-            $js_color  = addslashes($status_color);
-            $js_desc   = addslashes($item['deskripsi'] ?? '');
-            $js_fine   = addslashes($fine_fmt);
+            // Safe JS strings (escape quotes and newlines for inline JS)
+            $js_img   = htmlspecialchars(addslashes($gambar), ENT_QUOTES);
+            $js_nama  = htmlspecialchars(addslashes($item['nama_kostum']), ENT_QUOTES);
+            $js_cat   = htmlspecialchars(addslashes($cat_label), ENT_QUOTES);
+            $js_price = htmlspecialchars(addslashes($price_fmt), ENT_QUOTES);
+            $js_status = htmlspecialchars(addslashes($badge_text), ENT_QUOTES);
+            $js_color  = htmlspecialchars(addslashes($status_color), ENT_QUOTES);
+            $js_desc   = htmlspecialchars(addslashes(str_replace(["\r", "\n"], ["", "\\n"], $item['deskripsi'] ?? '')), ENT_QUOTES);
+            $js_fine   = htmlspecialchars(addslashes($fine_fmt), ENT_QUOTES);
 
             // Format nama kostum for display (split on space for line break effect)
             $nama_parts = explode(' ', $item['nama_kostum'], 2);
@@ -78,7 +82,7 @@ $result = mysqli_query($koneksi, "SELECT * FROM stok_kostum ORDER BY id DESC");
 
             $id = (int)$item['id'];
         ?>
-        <div class="ds-catalog-card" data-cat="<?= $cat_slug ?>" data-id="<?= $id ?>">
+        <div class="ds-catalog-card" data-cat="<?= $cat_slug ?>" data-id="<?= $id ?>" data-name="<?= htmlspecialchars(strtolower($item['nama_kostum'])) ?>">
             <img src="<?= $gambar ?>" alt="<?= htmlspecialchars($item['nama_kostum']) ?>">
             <div class="ds-avail-badge <?= $badge_class ?>"><?= $badge_text ?></div>
             <div class="ds-catalog-overlay">
@@ -173,18 +177,43 @@ $result = mysqli_query($koneksi, "SELECT * FROM stok_kostum ORDER BY id DESC");
     </div>
 </div>
 
+<style>
+#searchInput:focus {
+    border-color: var(--accent-gold) !important;
+    background: rgba(255,255,255,0.1) !important;
+}
+</style>
+
 <script>
-function filterCat(elem, cat) {
-    document.querySelectorAll('.ds-tab').forEach(t => t.classList.remove('active'));
-    elem.classList.add('active');
+function applyFilters() {
+    const cat = window.currentCat || 'all';
+    const query = (document.getElementById('searchInput').value || '').toLowerCase();
     
     document.querySelectorAll('.ds-catalog-card').forEach(card => {
-        if(cat === 'all' || card.getAttribute('data-cat') === cat) {
+        const itemCat = card.getAttribute('data-cat');
+        const itemName = card.getAttribute('data-name') || '';
+        
+        const matchCat = (cat === 'all' || itemCat === cat);
+        const matchSearch = itemName.includes(query);
+        
+        if (matchCat && matchSearch) {
             card.classList.remove('filter-hide');
         } else {
             card.classList.add('filter-hide');
         }
     });
+}
+
+function filterCat(elem, cat) {
+    document.querySelectorAll('.ds-tab').forEach(t => t.classList.remove('active'));
+    elem.classList.add('active');
+    
+    window.currentCat = cat;
+    applyFilters();
+}
+
+function searchCatalog() {
+    applyFilters();
 }
 
 function openQuickView(imgPath, title, cat, price, status, statusColor, desc, fine, stockAvail, stockTotal, itemId) {

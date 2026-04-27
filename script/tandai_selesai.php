@@ -11,6 +11,7 @@ $sewa_id      = (int)$_POST['sewa_id'];
 $actual_date  = $_POST['actual_date'] ?? date('Y-m-d');
 $denda_late   = (float)($_POST['late_fee']  ?? 0);
 $denda_other  = (float)($_POST['other_fee'] ?? 0);
+$other_fee_map= json_decode($_POST['other_fee_map'] ?? '{}', true);
 $total_denda  = $denda_late + $denda_other;
 
 // ── Validate sewa ─────────────────────────────────────────────────────────────
@@ -72,8 +73,15 @@ $model_share      = 0.0;
 $has_karnaval  = false;
 $has_desainer  = false;
 
+$total_qty = 0;
+foreach ($details as $d) {
+    $total_qty += (int)$d['qty'];
+}
+$denda_late_per_qty = $total_qty > 0 ? ($denda_late / $total_qty) : 0;
+
 foreach ($details as $d) {
     $is_karnaval = (stripos($d['kategori'], 'karnaval') !== false);
+    $ds_id = (int)$d['id'];
 
     $rental_item = (float)$d['harga'] * (int)$d['qty'] * $days_rent;
     $model_item  = 0.0;
@@ -81,35 +89,25 @@ foreach ($details as $d) {
         $model_item = (float)$d['harga_model_db'] * (int)$d['jumlah_model'] * (int)$d['hari_model'];
     }
 
+    $item_other_denda = isset($other_fee_map[$ds_id]) ? (float)$other_fee_map[$ds_id] : 0;
+    $item_late_denda  = $denda_late_per_qty * (int)$d['qty'];
+    
+    $item_total_denda = $item_late_denda + $item_other_denda;
+
     $rental_fee_total += $rental_item;
     $model_fee_total  += $model_item;
 
     if ($is_karnaval) {
         $has_karnaval   = true;
-        $bantar_share  += $rental_item;
+        $bantar_share  += $rental_item + $item_total_denda;
         $model_share   += $model_item;
     } else {
         $has_desainer   = true;
-        $designer_share += 0.9 * $rental_item;
+        $designer_share += (0.9 * $rental_item) + $item_total_denda;
         $bantar_share   += 0.1 * $rental_item;
     }
 }
 
-// ── Distribusikan denda ───────────────────────────────────────────────────────
-if ($total_denda > 0) {
-    $is_mixed = ($has_karnaval && $has_desainer);
-
-    if ($is_mixed) {
-        // Mixed → semua denda ke bantar sebagai kolektor
-        $bantar_share += $total_denda;
-    } elseif ($has_karnaval) {
-        // Pure karnaval → denda ke bantar
-        $bantar_share += $total_denda;
-    } else {
-        // Pure desainer → denda ke designer_share
-        $designer_share += $total_denda;
-    }
-}
 
 // ── Total pemasukan ───────────────────────────────────────────────────────────
 $rental_fee_col    = (float)$sewa['total_harga']; // sudah include model fees
@@ -127,6 +125,13 @@ try {
     mysqli_stmt_bind_param($st, 'i', $sewa_id);
     mysqli_stmt_execute($st);
     mysqli_stmt_close($st);
+
+    // 1.5. Update detail_sewa denda_lain
+    foreach ($other_fee_map as $ds_id => $val) {
+        $val = (float)$val;
+        $ds_id = (int)$ds_id;
+        mysqli_query($koneksi, "UPDATE detail_sewa SET denda_lain = $val WHERE id = $ds_id");
+    }
 
     // 2. Insert pengembalian
     $pen = mysqli_prepare($koneksi, "
@@ -157,7 +162,7 @@ try {
     ");
     mysqli_stmt_bind_param($lk, 'isddddddd',
         $sewa_id,
-        $today,
+        $actual_date,
         $denda_late,
         $denda_other,
         $rental_fee_col,

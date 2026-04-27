@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_busana'])) {
     $rental_model_price = preg_replace("/[^0-9]/", "", $_POST['rental_model_price'] ?? '0');
     $jumlah = (int)($_POST['jumlah'] ?? 0);
 
-    $gambar_path = "";
+    $gambar_path = "assets/uploads/kostum_1777183839_6907.jpg";
     if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] == 0) {
         $upload_dir = 'assets/uploads/';
         if (!is_dir($upload_dir)) {
