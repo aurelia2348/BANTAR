@@ -51,7 +51,8 @@ $ledger = mysqli_query($koneksi, "
     LIMIT $per_page OFFSET $offset
 ");
 
-function rpFmt($n) {
+function rpFmt($n)
+{
     return 'Rp ' . number_format((float)$n, 0, ',', '.');
 }
 ?>
@@ -340,3 +341,29 @@ function rpFmt($n) {
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+function exportPDF() {
+    var element = document.querySelector('.ds-content');
+    var opt = {
+        margin:       [0.5, 0.5],
+        filename:     'Financial_Report_BANTAR.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+    };
+    
+    // Hide actions and pagination for clean print
+    var actions = document.querySelector('.fin-top-actions');
+    var pagination = document.querySelector('.rh-pagination-bar');
+    if (actions) actions.style.display = 'none';
+    if (pagination) pagination.style.display = 'none';
+    
+    html2pdf().set(opt).from(element).save().then(() => {
+        // Restore layout
+        if (actions) actions.style.display = '';
+        if (pagination) pagination.style.display = 'flex';
+    });
+}
+</script>

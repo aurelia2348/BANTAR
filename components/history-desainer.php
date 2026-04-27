@@ -136,7 +136,7 @@ if (!function_exists('rpFmt')) {
 ?>
 
 <div class="ds-content">
-    
+
     <!-- Top Header & Search -->
     <div class="rh-top-section" style="margin-bottom: 24px;">
         <div>
@@ -389,7 +389,7 @@ if (!function_exists('rpFmt')) {
     <div class="rh-modal-overlay" id="transactionModal">
         <div class="rh-modal-content">
             <i class="ph ph-x rh-modal-close" onclick="closeTransactionModal()"></i>
-            
+
             <div class="rh-modal-header">
                 <div>
                     <h2 class="rh-modal-title">Royalty Detail</h2>
@@ -483,9 +483,13 @@ if (!function_exists('rpFmt')) {
         var totalFeeNum = parseInt(totalFeeTxt.replace(/[^0-9]/g, ''));
         var platformFeeNum = totalFeeNum * 0.1;
         var platformFeeTxt = 'Rp ' + platformFeeNum.toLocaleString('id-ID');
-        
+
         // Setup current date
-        var todayOpts = { year: 'numeric', month: 'long', day: 'numeric' };
+        var todayOpts = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        };
         var today = new Date().toLocaleDateString('en-GB', todayOpts).toUpperCase();
 
         document.getElementById('modal-order-id').innerText = orderId;

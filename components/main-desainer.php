@@ -117,7 +117,7 @@ if (!function_exists('ds_rp_full')) {
     </div>
 
     <div class="ds-grid">
-        
+
         <!-- Royalty Income Card -->
         <div class="ds-card ds-widget-income" style="grid-column: 1 / 2; grid-row: 1 / 2; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden;">
             <div style="position: absolute; right: -20px; top: -20px; font-size: 180px; color: rgba(255,255,255,0.02); pointer-events: none;">
